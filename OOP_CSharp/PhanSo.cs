@@ -42,8 +42,8 @@ namespace OOP_CSharp
                 b = temp;
             }
 
-            tu = tu / a;
-            mau = mau / a;
+            Tu = Tu / a;
+            Mau = Mau / a;
 
             if (mau < 0)
             {
@@ -66,21 +66,21 @@ namespace OOP_CSharp
 
         public static PhanSo operator -(PhanSo a, PhanSo b)
         {
-            int t = (a.Tu * b.Mau) - (a.Mau * b.tu);
+            int t = (a.Tu * b.Mau) - (a.Mau * b.Tu);
             int m = a.Mau * b.Mau;
             return new PhanSo(t, m);
         }
 
         public static PhanSo operator *(PhanSo a, PhanSo b)
         {
-            int t = (a.Tu * b.tu);
+            int t = (a.Tu * b.Tu);
             int m = (a.Mau * b.Mau);
             return new PhanSo(t, m);
         }
 
         public static PhanSo operator /(PhanSo a, PhanSo b)
         {
-            if (b.tu == 0)
+            if (b.Tu == 0)
             {
                 Console.WriteLine("Phân số ko hợp lệ");
                 return null;
@@ -89,7 +89,7 @@ namespace OOP_CSharp
             {
 
                 int t = (a.Tu * b.Mau);
-                int m = (a.Mau * b.tu);
+                int m = (a.Mau * b.Tu);
                 return new PhanSo(t, m);
             }
         }
