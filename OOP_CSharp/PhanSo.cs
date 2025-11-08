@@ -32,8 +32,8 @@ namespace OOP_CSharp
 
         public void RutGon()
         {
-            int a = Math.Abs(tu);
-            int b = Math.Abs(mau);
+            int a = Math.Abs(Tu);
+            int b = Math.Abs(Mau);
 
             while (b != 0)
             {
@@ -47,34 +47,34 @@ namespace OOP_CSharp
 
             if (mau < 0)
             {
-                tu = -tu;
-                mau = -mau;
+                Tu = -Tu;
+                Mau = -Mau;
             }
         }
 
         public void HienThi()
         {
-            Console.WriteLine($"{tu}/{mau}");
+            Console.WriteLine($"{Tu}/{Mau}");
         }
 
         public static PhanSo operator +(PhanSo a, PhanSo b)
         {
-            int t = (a.tu * b.mau) + (a.mau * b.tu);
-            int m = a.mau * b.mau;
+            int t = (a.Tu * b.Mau) + (a.Mau * b.Tu);
+            int m = a.Mau * b.Mau;
             return new PhanSo(t, m);
         }
 
         public static PhanSo operator -(PhanSo a, PhanSo b)
         {
-            int t = (a.tu * b.mau) - (a.mau * b.tu);
-            int m = a.mau * b.mau;
+            int t = (a.Tu * b.Mau) - (a.Mau * b.tu);
+            int m = a.Mau * b.Mau;
             return new PhanSo(t, m);
         }
 
         public static PhanSo operator *(PhanSo a, PhanSo b)
         {
-            int t = (a.tu * b.tu);
-            int m = (a.mau * b.mau);
+            int t = (a.Tu * b.tu);
+            int m = (a.Mau * b.Mau);
             return new PhanSo(t, m);
         }
 
@@ -88,8 +88,8 @@ namespace OOP_CSharp
             else
             {
 
-                int t = (a.tu * b.mau);
-                int m = (a.mau * b.tu);
+                int t = (a.Tu * b.Mau);
+                int m = (a.Mau * b.tu);
                 return new PhanSo(t, m);
             }
         }
