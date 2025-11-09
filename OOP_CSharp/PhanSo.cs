@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ConsoleApp1;
 
 namespace OOP_CSharp
 {
@@ -20,7 +21,11 @@ namespace OOP_CSharp
                 if (value != 0)
                 {
                     mau = value;
-                }    
+                }
+                else
+                {
+                    throw new ZeroException();
+                }
             }
         }
 
@@ -53,9 +58,9 @@ namespace OOP_CSharp
             }
         }
 
-        public void HienThi()
+        public string HienThi()
         {
-            Console.WriteLine($"{Tu}/{Mau}");
+            return $"{Tu}/{Mau}";
         }
 
         public static PhanSo operator + (PhanSo a, PhanSo b)
