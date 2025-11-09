@@ -103,7 +103,7 @@ namespace OOP_CSharp
 
         public static bool operator < (PhanSo a, PhanSo b)
         {
-            return a.Tu * b.Mau < a.Mau * b.Tu;
+            return !(a > b);
         }
 
         public static bool operator >= (PhanSo a, PhanSo b)
@@ -111,7 +111,7 @@ namespace OOP_CSharp
             return a.Tu * b.Mau >= a.Mau * b.Tu;
         }
 
-        public static bool operator <=(PhanSo a, PhanSo b)
+        public static bool operator <= (PhanSo a, PhanSo b)
         {
             return a.Tu * b.Mau <= a.Mau * b.Tu;
         }
@@ -121,7 +121,7 @@ namespace OOP_CSharp
             return new PhanSo(a);
         }
 
-        public static explicit operator double(PhanSo a)
+        public static implicit operator double(PhanSo a)
         {
             return (double)a.Tu / a.Mau;
         }
