@@ -20,7 +20,10 @@ namespace OOP_CSharp
             //CongTy.LuongCaoNhat();
             //Console.WriteLine($"Tổng số giờ làm việc của NVHĐ là: { CongTy.TinhTongSoGio()}");
 
-            
+            PhanSo a = new PhanSo(1, 2);
+            PhanSo b = new PhanSo(3, 4);
+            Console.WriteLine((int)a);
+
         }
     }
 }
