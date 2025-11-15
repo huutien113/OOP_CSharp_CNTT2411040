@@ -54,13 +54,13 @@ namespace OOP_CSharp
             CongTy.AddEmployee(a);
             a = new PartTimeEmployee(id: "PT002", name: "Nguyễn Duy Khương", dept: "IT", hireDate: DateTime.Parse("1/22/2023"), hourlyRate: 32000, hoursWorked: 240);
             CongTy.AddEmployee(a);
-            a = new PartTimeEmployee(id: "PT003", name: "Lê Ngọc Triết", dept: "MKT", hireDate: DateTime.Parse("10/25/2015"), hourlyRate: 40000, hoursWorked: 240);
+            a = new PartTimeEmployee(id: "PT003", name: "Lê Ngọc Triết", dept: "MKT", hireDate: DateTime.Parse("10/25/2015"), hourlyRate: 32000, hoursWorked: 240);
             CongTy.AddEmployee(a);
             a = new Manager(id: "FT005", name: "Nguyễn Thanh Tùng", dept: "MKT", hireDate: DateTime.Parse("5/24/2018"), baseSalary: 7000000, bonusRate: 0.3, subordinates: 2);
             CongTy.AddEmployee(a);
-            a = new Manager(id: "FT006", name: "Phạm Nhật Vượng", dept: "HR", hireDate: DateTime.Parse("9/9/2018"), baseSalary: 9000000, bonusRate: 0.25, subordinates: 2);
+            a = new Manager(id: "FT006", name: "Phạm Nhật Vượng", dept: "HR", hireDate: DateTime.Parse("9/9/2018"), baseSalary: 9000000, bonusRate: 0.3, subordinates: 2);
             CongTy.AddEmployee(a);
-            a = new Manager(id: "FT007", name: "Huỳnh Hữu Tiến", dept: "IT", hireDate: DateTime.Parse("3/11/2018"), baseSalary: 8000000, bonusRate: 0.3, subordinates: 4);
+            a = new Manager(id: "FT007", name: "Huỳnh Hữu Tiến", dept: "IT", hireDate: DateTime.Parse("3/11/2018"), baseSalary: 9000000, bonusRate: 0.3, subordinates: 4);
             CongTy.AddEmployee(a);
 
             Console.WriteLine($"Toàn bộ nhân viên: {CongTy.HienThiTatCa()}");
@@ -95,10 +95,10 @@ namespace OOP_CSharp
                 }
             }
 
-
-            Console.WriteLine("Top 5 nhân viên lương cao nhất: ");
+            int Top = 5;
+            Console.WriteLine($"Top {Top} lương cao nhất: ");
             CongTy.SortEmployeesBySalaryDescending();
-            List<Employee> Top5 = CongTy.GetTopHighestPaid(5);
+            List<Employee> Top5 = CongTy.GetTopHighestPaid(Top);
             for (int i = 0;i < Top5.Count;i++)
             {
                 Console.WriteLine(Top5[i].GetInfo());

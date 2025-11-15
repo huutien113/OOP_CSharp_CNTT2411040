@@ -46,14 +46,15 @@
     <Compile Include="CB.cs" />
     <Compile Include="CBVC.cs" />
     <Compile Include="classLib.cs" />
+    <Compile Include="classLib2.cs" />
     <Compile Include="Company.cs" />
     <Compile Include="DiemXY.cs" />
     <Compile Include="GV.cs" />
     <Compile Include="NhanVien.cs" />
     <Compile Include="NhanVienBienChe.cs" />
     <Compile Include="NhanVienHopDong.cs" />
+    <Compile Include="OnlineShop.cs" />
     <Compile Include="PhanSo.cs" />
-    <Compile Include="PS.cs" />
     <Compile Include="PhuongTien.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
