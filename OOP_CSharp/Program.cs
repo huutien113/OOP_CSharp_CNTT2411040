@@ -96,8 +96,7 @@ namespace OOP_CSharp
             }
 
             int Top = 5;
-            Console.WriteLine($"Top {Top} lương cao nhất: ");
-            CongTy.SortEmployeesBySalaryDescending();
+            Console.WriteLine($"Top {Top} lương cao nhất: ");            
             List<Employee> Top5 = CongTy.GetTopHighestPaid(Top);
             for (int i = 0;i < Top5.Count;i++)
             {
