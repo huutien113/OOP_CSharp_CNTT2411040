@@ -45,6 +45,8 @@
   <ItemGroup>
     <Compile Include="CB.cs" />
     <Compile Include="CBVC.cs" />
+    <Compile Include="classLib.cs" />
+    <Compile Include="Company.cs" />
     <Compile Include="DiemXY.cs" />
     <Compile Include="GV.cs" />
     <Compile Include="NhanVien.cs" />
