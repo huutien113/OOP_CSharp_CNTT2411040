@@ -139,12 +139,57 @@ namespace OOP_CSharp
         }
 
 
-        //public bool PlaceOrder(Order order)
-        //{
-        //    for (int i = 0; i < order.Items.Count; i++)
-        //    {
+        public bool PlaceOrder(Order order)
+        {
+            if (order == null || order.Items.Count == 0)
+                return false;
 
-        //    }    
+            for (int i = 0; i < order.Items.Count; i++)
+            {
+                Product SanPham = order.Items[i].Item;
+                int SoLuong = order.Items[i].Quantity;
+
+                Product SPTonKho = FindProductById(SanPham.ProductId);
+                if (SPTonKho == null)
+                {
+                    return false;
+                }
+                if (SPTonKho.StockQuantity < SoLuong)
+                {
+                    return false;
+                }    
+            }
+
+            for (int i = 0; i < order.Items.Count; i++)
+            {
+                Product SanPham = order.Items[i].Item;
+                int SoLuong = order.Items[i].Quantity;
+
+                Product SPTonKho = FindProductById(SanPham.ProductId);
+                SPTonKho.ReduceStock(SoLuong);
+            }
+
+            Orders.Add(order);
+            return true;
+        }
+
+        public double CalculateRevenue(DateTime from, DateTime to)
+        {
+            double Tong = 0;
+            for (int i = 0; i < Orders.Count; i++)
+            {
+                if (Orders[i].OrderDate >= from && Orders[i].OrderDate <= to)
+                {
+                    Tong = Tong + Orders[i].CalculateTotal();
+                }
+            }
+            return Tong;
+        }
+
+        //public List<Product> GetBestSellingProducts(int topCount)
+        //{
+        //    List<Product> Lst_Top = new List<Product>();
+
         //}
     }
 }
