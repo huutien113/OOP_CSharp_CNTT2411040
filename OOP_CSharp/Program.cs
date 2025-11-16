@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using ConsoleApp1;
 using ConsoleApplication3;
 
@@ -109,10 +112,103 @@ namespace OOP_CSharp
 
 
 
+            OnlineShop shop = new OnlineShop();
+
+            Laptop a = new Laptop("LP001", "Dell XPS 15", 35000000, 5, "i7-12700H", 16, "RTX 3050");
+            shop.AddProduct(a);
+            a = new Laptop("LP002", "MacBook Pro 14", 55000000, 3, "M2 Pro", 16, "Integrated");
+            shop.AddProduct(a);
+            a = new Laptop("LP003", "Asus ROG", 42000000, 1, "Ryzen 9", 32, "RTX 3070");
+            shop.AddProduct(a);
+            a = new Laptop("LP004", "HP Spectre", 30000000, 2, "i5-1235U", 8, "Iris Xe");
+            shop.AddProduct(a);
+
+
+            Smartphone b = new Smartphone("SP001", "iPhone 15", 25000000, 10, "6.1", 48);
+            shop.AddProduct(b);
+            b = new Smartphone("SP002", "Samsung S24", 22000000, 1, "6.2", 50);
+            shop.AddProduct(b);
+            b = new Smartphone("SP003", "Xiaomi 14", 15000000, 15, "6.36", 50);
+            shop.AddProduct(b);
+            b = new Smartphone("SP004", "Oppo Reno", 12000000, 5, "6.4", 64);
+            shop.AddProduct(b);
 
 
 
+            Order DonHang_1 = new Order(id: "DH001", customer: "Nguyễn Văn Cường", discount: 0);
+            DonHang_1.AddItem(new Laptop("LP002", "MacBook Pro 14", 55000000, 3, "M2 Pro", 16, "Integrated"), 3);
+            DonHang_1.AddItem(new Smartphone("SP004", "Oppo Reno", 12000000, 8, "6.4", 64), 2);
 
+            if (shop.PlaceOrder(DonHang_1))
+            {
+                Console.WriteLine("Đặt hàng thành công");
+                shop.Orders.Add(DonHang_1);
+            }
+            else if (shop.PlaceOrder(DonHang_1) == false)
+            {
+                Console.WriteLine("Đặt hàng không thành công");
+            }
+
+
+            Order DonHang_2 = new Order(id: "DH002", customer: "Trịnh Trần Phương Tuấn", discount: 10);
+            DonHang_2.AddItem(new Laptop("LP003", "Asus ROG", 42000000, 4, "Ryzen 9", 32, "RTX 3070"), 1);
+            DonHang_2.AddItem(new Smartphone("SP003", "Xiaomi 14", 15000000, 15, "6.36", 50), 1);
+
+            if (shop.PlaceOrder(DonHang_2))
+            {
+                Console.WriteLine("Đặt hàng thành công");
+                shop.Orders.Add(DonHang_2);
+            }
+            else if (shop.PlaceOrder(DonHang_2) == false)
+            {
+                Console.WriteLine("Đặt hàng không thành công");
+            }
+
+
+            for (int i = 0; i < shop.Orders.Count; i++)
+            {
+                Console.WriteLine(shop.Orders[i].GetOrderDetail());
+            }
+
+            //Console.Write("Từ (dd/MM/yyyy): ");
+            //DateTime from = DateTime.ParseExact(Console.ReadLine(), "dd/MM/yyyy", null);
+            //Console.Write("Đến (dd/MM/yyyy): ");
+            //DateTime to = DateTime.ParseExact(Console.ReadLine(), "dd/MM/yyyy", null);
+
+            //Console.WriteLine($"Tổng doanh thu từ ngày... tới ....: {shop.CalculateRevenue(from, to)}");
+
+            int Top = 3;
+            shop.GetBestSellingProducts(Top); 
+            for (int i = 0; i < Top; i++)
+            {
+                Console.WriteLine($"Top {i+1} { shop.GetBestSellingProducts(Top)[i].GetInfo()}");
+            }
+
+
+            Dictionary<string, double> ThongKe = shop.RevenueByCategory();
+            for (int i = 0; i < ThongKe.Count; i++)
+            {
+                string key = ThongKe.ElementAt(i).Key;
+                double value = ThongKe.ElementAt(i).Value;
+
+                Console.WriteLine($"{key}: {value}");
+            }
+
+            Console.WriteLine("---------------------------");
+
+            List<Order> DonHang = shop.GetOrdersByCustomerName("Nguyễn Văn Cường");
+            Console.WriteLine("Đơn hàng khách hàng:");
+            for (int i = 0; i < DonHang.Count; i++)
+            {
+                Console.WriteLine($"{DonHang[i].GetOrderDetail()}");
+            }
+
+            Console.WriteLine("---------------------------");
+
+            for (int i = 0; i < shop.CheckStock(3).Count; i++)
+            {
+                Console.WriteLine(shop.CheckStock(3)[i].GetInfo());
+            }
         }
     }
 }

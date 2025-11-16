@@ -51,6 +51,17 @@ namespace OOP_CSharp
                     return false;
                 }
             }
+
+            for (int i = 0; i < order.Items.Count; i++)
+            {
+                Product SanPham = order.Items[i].Item;
+                int SoLuong = order.Items[i].Quantity;
+
+                Product SPTonKho = FindProductById(SanPham.ProductId);
+                SPTonKho.ReduceStock(SoLuong);
+            }
+
+            Orders.Add(order);
             return true;
         }
 
@@ -181,5 +192,20 @@ namespace OOP_CSharp
             }
             return Lst_DonHang;
         }
+
+
+        public List<Product> CheckStock(int SoLuong)
+        {
+            List <Product> Lst_SanPham = new List<Product>();
+            for (int i = 0; i < Products.Count; i++)
+            {
+                if (Products[i].StockQuantity < SoLuong)
+                {
+                    Lst_SanPham.Add(Products[i]);
+                }
+            }
+            return Lst_SanPham;
+        }
+
     }
 }
