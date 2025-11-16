@@ -18,24 +18,11 @@ namespace OOP_CSharp
             {
                 if (Products[i].ProductId == sp.ProductId)
                 {
-                    Console.WriteLine("Mã sản phẩm đã tồn tại");
+                    Products[i].StockQuantity += sp.StockQuantity;
                     return;
                 }
             }
             Products.Add(sp);
-        }
-
-        public bool RemoveProduct(string id)
-        {
-            for (int i = 0; i < Products.Count; i++)
-            {
-                if (Products[i].ProductId == id)
-                {
-                    Products.RemoveAt(i);
-                    return true;
-                }
-            }
-            return false;
         }
 
         public Product FindProductById(string id)
@@ -50,127 +37,33 @@ namespace OOP_CSharp
             return null;
         }
 
-        public List<Product> GetProductsByCategory(string LoaiSP)
-        {
-            List<Product> Lst_SP = new List<Product>();
-            if (LoaiSP.ToUpper() == "LAPTOP")
-            {
-                for (int i = 0; i < Products.Count - 1; i++)
-                {
-                    if (Products[i] is Laptop)
-                    {
-                        Lst_SP.Add(Products[i]);
-                    }
-                }
-                return Lst_SP;
-            }
-            else if (LoaiSP.ToUpper() == "SMARTPHONE")
-            {
-                for (int i = 0; i < Products.Count - 1; i++)
-                {
-                    if (Products[i] is Smartphone)
-                    {
-                        Lst_SP.Add(Products[i]);
-                    }
-                }
-                return Lst_SP;
-            }
-            return Lst_SP;
-        }
-
-        public void SortProductsByPriceDescending()
-        {
-            for (int i = 0; i < Products.Count; i++)
-            {
-                for (int j = 0; j < Products.Count - i - 1; j++)
-                {
-                    if (Products[j].Price < Products[j + 1].Price)
-                    {
-                        Product temp = Products[j];
-                        Products[j] = Products[j + 1];
-                        Products[j + 1] = temp;
-                    }
-                }
-            }
-        }
-
-        public Dictionary<string, int> CountProductsByCategory()
-        {
-            Dictionary<string, int> ThongKe = new Dictionary<string, int>()
-            {
-                { "Laptop", 0 }, { "Smartphone", 0 }
-            };
-
-            for (int i = 0; i < Products.Count; i++)
-            {
-                if (Products[i] is Laptop)
-                {
-                    ThongKe["Laptop"]++;
-                }
-                else if (Products[i] is Smartphone)
-                {
-                    ThongKe["Smartphone"]++;
-                }
-            }
-            return ThongKe;
-        }
-
-        public List<Product> GetTopHighestPrice(int topCount)
-        {
-            List<Product> Top = new List<Product>();
-            SortProductsByPriceDescending();
-
-            for (int i = 0;i < topCount;i++)
-            {
-                Top.Add(Products[i]);
-            }    
-            return Top;
-        }
-
-        public double CalculateTotalInventoryValue()
-        {
-            double Tong = 0;
-
-            for (int i = 0; i < Products.Count; i++)
-            {
-                Tong = Tong + Products[i].Price * Products[i].StockQuantity;
-            }
-            return Tong;
-        }
-
-
         public bool PlaceOrder(Order order)
         {
-            if (order == null || order.Items.Count == 0)
-                return false;
-
             for (int i = 0; i < order.Items.Count; i++)
             {
-                Product SanPham = order.Items[i].Item;
-                int SoLuong = order.Items[i].Quantity;
-
-                Product SPTonKho = FindProductById(SanPham.ProductId);
+                Product SPTonKho = FindProductById(order.Items[i].Item.ProductId);
                 if (SPTonKho == null)
                 {
                     return false;
                 }
-                if (SPTonKho.StockQuantity < SoLuong)
+                else if (SPTonKho.StockQuantity < order.Items[i].Quantity)
                 {
                     return false;
-                }    
+                }
             }
-
-            for (int i = 0; i < order.Items.Count; i++)
-            {
-                Product SanPham = order.Items[i].Item;
-                int SoLuong = order.Items[i].Quantity;
-
-                Product SPTonKho = FindProductById(SanPham.ProductId);
-                SPTonKho.ReduceStock(SoLuong);
-            }
-
-            Orders.Add(order);
             return true;
+        }
+
+        public Order FindOrderById(string id)
+        {
+            for (int i = 0; i < Orders.Count; i++)
+            {
+                if (Orders[i].OrderId == id)
+                {
+                    return Orders[i];
+                }
+            }
+            return null;
         }
 
         public double CalculateRevenue(DateTime from, DateTime to)
@@ -180,16 +73,113 @@ namespace OOP_CSharp
             {
                 if (Orders[i].OrderDate >= from && Orders[i].OrderDate <= to)
                 {
-                    Tong = Tong + Orders[i].CalculateTotal();
+                    Tong += Orders[i].CalculateTotal();
                 }
             }
             return Tong;
         }
 
-        //public List<Product> GetBestSellingProducts(int topCount)
-        //{
-        //    List<Product> Lst_Top = new List<Product>();
+        public List<Product> GetBestSellingProducts(int topCount)
+        {
+            List<Product> Lst_Top = new List<Product>();
+            Dictionary<string, int> ThongKe = new Dictionary<string, int>();
 
-        //}
+            for (int i = 0; i < Orders.Count; i++)
+            {
+                for (int j = 0; j < Orders[i].Items.Count; j++)
+                {
+                    string ID = Orders[i].Items[j].Item.ProductId;
+                    int SoLuongBan = Orders[i].Items[j].Quantity;
+
+                    if (ThongKe.ContainsKey(ID))
+                    {
+                        ThongKe[ID] += SoLuongBan;
+                    }
+                    else
+                    {
+                        ThongKe[ID] = SoLuongBan;
+                    }
+                }
+            }
+
+            List<string> Lst_ID = new List<string>();
+            List<int> Lst_SoLuongBan = new List<int>();
+
+            for (int i = 0; i < Products.Count; i++)
+            {
+                string ID = Products[i].ProductId;
+                if (ThongKe.ContainsKey(ID))
+                {
+                    Lst_ID.Add(ID);
+                    Lst_SoLuongBan.Add(ThongKe[ID]);
+                }
+            }
+
+            for (int i = 0; i < Lst_SoLuongBan.Count; i++)
+            {
+                for (int j = 0; j < Lst_SoLuongBan.Count - i - 1; j++)
+                {
+                    if (Lst_SoLuongBan[j] < Lst_SoLuongBan[j + 1])
+                    {
+                        int temp = Lst_SoLuongBan[j];
+                        Lst_SoLuongBan[j] = Lst_SoLuongBan[j + 1];
+                        Lst_SoLuongBan[j + 1] = temp;
+
+                        string tempID = Lst_ID[j];
+                        Lst_ID[j] = Lst_ID[j + 1];
+                        Lst_ID[j+1] = tempID;
+                    }
+                }
+            }
+
+            for (int i = 0; i < Lst_ID.Count && i < topCount; i++)
+            {
+                Product SanPham = FindProductById(Lst_ID[i]);
+                if (SanPham != null)
+                {
+                    Lst_Top.Add(SanPham);
+                }
+            }
+
+            return Lst_Top;
+        }
+
+
+        public Dictionary<string, double> RevenueByCategory()
+        {
+            Dictionary<string, double> ThongKe = new Dictionary<string, double>()
+            {
+                { "Laptop", 0 }, { "Smartphone", 0 }
+            };
+
+            for (int i = 0; i < Orders.Count; i++)
+            {
+                for (int j = 0; j < Orders[i].Items.Count; j++)
+                {
+                    if (Orders[i].Items[j].Item is Laptop)
+                    {
+                        ThongKe["Laptop"] += Orders[i].Items[j].GetSubTotal();
+                    }
+                    else if (Orders[i].Items[j].Item is Smartphone)
+                    {
+                        ThongKe["Smartphone"] += Orders[i].Items[j].GetSubTotal();
+                    }
+                }
+            }
+            return ThongKe;
+        }
+
+        public List<Order> GetOrdersByCustomerName(string name)
+        {
+            List <Order> Lst_DonHang = new List<Order>();
+            for (int i = 0; i < Orders.Count; i++)
+            {
+                if (Orders[i].CustomerName == name)
+                {
+                    Lst_DonHang.Add(Orders[i]);
+                }
+            }
+            return Lst_DonHang;
+        }
     }
 }
