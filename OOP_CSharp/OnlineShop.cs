@@ -18,7 +18,7 @@ namespace OOP_CSharp
             {
                 if (Products[i].ProductId == sp.ProductId)
                 {
-                    Products[i].StockQuantity += sp.StockQuantity;
+                    Products[i].IncreaseStock(sp.StockQuantity);
                     return;
                 }
             }
@@ -39,19 +39,23 @@ namespace OOP_CSharp
 
         public bool PlaceOrder(Order order)
         {
+            if (order == null || order.Items.Count == 0)
+                return false;
             for (int i = 0; i < order.Items.Count; i++)
             {
-                Product SPTonKho = FindProductById(order.Items[i].Item.ProductId);
+                Product SanPham = order.Items[i].Item;
+                int SoLuong = order.Items[i].Quantity;
+
+                Product SPTonKho = FindProductById(SanPham.ProductId);
                 if (SPTonKho == null)
                 {
                     return false;
                 }
-                else if (SPTonKho.StockQuantity < order.Items[i].Quantity)
+                if (SPTonKho.StockQuantity < SoLuong)
                 {
                     return false;
                 }
             }
-
             for (int i = 0; i < order.Items.Count; i++)
             {
                 Product SanPham = order.Items[i].Item;
@@ -95,6 +99,10 @@ namespace OOP_CSharp
             List<Product> Lst_Top = new List<Product>();
             Dictionary<string, int> ThongKe = new Dictionary<string, int>();
 
+            if (Orders.Count < topCount)
+            {
+                return Lst_Top;
+            }
             for (int i = 0; i < Orders.Count; i++)
             {
                 for (int j = 0; j < Orders[i].Items.Count; j++)
@@ -193,6 +201,34 @@ namespace OOP_CSharp
             return Lst_DonHang;
         }
 
+        public List<string> ThongTinKH(string name)
+        {
+            List<string> Lst_Info = new List<string>();
+            for (int i = 0; i < Orders.Count; i++)
+            {
+                if (Orders[i].CustomerName == name)
+                {
+                    Lst_Info.Add(Orders[i].OrderId);
+                    Lst_Info.Add(Orders[i].CustomerName);
+                    Lst_Info.Add(Orders[i].Discount.ToString());
+                    break;
+                }
+            }
+            return Lst_Info;
+        }
+
+        public string NewOrderID()
+        {
+            int MaDH = Orders.Count;
+            for (int i = 0; i < Orders.Count; i++)
+            {
+                if (Orders.Count <= 0)
+                {
+                    return "DH001";
+                }
+            }
+            return $"DH00{MaDH + 1}";
+        }
 
         public List<Product> CheckStock(int SoLuong)
         {
