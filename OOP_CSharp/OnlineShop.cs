@@ -41,23 +41,9 @@ namespace OOP_CSharp
         {
             if (order == null || order.Items.Count == 0)
                 return false;
-            //for (int i = 0; i < order.Items.Count; i++)
-            //{
-            //    Product SanPham = order.Items[i].Item;
-            //    int SoLuong = order.Items[i].Quantity;
-
-            //    Product SPTonKho = FindProductById(SanPham.ProductId);
-            //    if (SPTonKho == null)
-            //    {
-            //        return false;
-            //    }
-            //    if (SPTonKho.StockQuantity < SoLuong)
-            //    {
-            //        return false;
-            //    }
-            //}
             
-
+            // Lưu ý: Tồn kho đã được kiểm tra và giảm trong Order.AddItem()
+            // PlaceOrder() chỉ là bước cuối để xác nhận và lưu đơn hàng
             Orders.Add(order);
             return true;
         }

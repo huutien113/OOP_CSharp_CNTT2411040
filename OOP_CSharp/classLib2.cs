@@ -110,9 +110,11 @@ namespace ConsoleApplication3
 
         public bool AddItem(Product p, int qty)
         {
+            // Kiểm tra tồn kho trước khi thêm sản phẩm
             if (p.StockQuantity < qty)
                 return false;
             Items.Add(new OrderItem(p, qty));
+            // Giảm tồn kho ngay khi thêm item vào đơn hàng (giữ hàng)
             p.ReduceStock(qty);
             return true;
         }

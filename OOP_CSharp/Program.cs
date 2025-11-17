@@ -234,6 +234,7 @@ namespace OOP_CSharp
                     {
                         if (KT_Huy == true && DonHang.Items.Count > 0)
                         {
+                            // Hoàn trả tồn kho khi hủy đơn hàng
                             for (int i = 0; i < DonHang.Items.Count; i++)
                             {
                                 Product SP = shop.FindProductById(DonHang.Items[i].Item.ProductId);
