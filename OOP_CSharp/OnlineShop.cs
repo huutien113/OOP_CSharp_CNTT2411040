@@ -39,25 +39,30 @@ namespace OOP_CSharp
 
         public bool PlaceOrder(Order order)
         {
-            // Kiểm tra tồn kho THỰC TẾ trong shop.Products
+            if (order == null || order.Items.Count == 0)
+                return false;
             for (int i = 0; i < order.Items.Count; i++)
             {
-                Product SPTonKho = FindProductById(order.Items[i].Item.ProductId);
+                Product SanPham = order.Items[i].Item;
+                int SoLuong = order.Items[i].Quantity;
+
+                Product SPTonKho = FindProductById(SanPham.ProductId);
                 if (SPTonKho == null)
                 {
                     return false;
                 }
-                else if (SPTonKho.StockQuantity < order.Items[i].Quantity)
+                if (SPTonKho.StockQuantity < SoLuong)
                 {
-                    return false; // Sẽ return false khi kiểm tra SP003: 15 < 100
+                    return false;
                 }
             }
-
-            // Chỉ chạy đến đây nếu ĐỦ HÀNG
             for (int i = 0; i < order.Items.Count; i++)
             {
-                Product SPTonKho = FindProductById(order.Items[i].Item.ProductId);
-                SPTonKho.ReduceStock(order.Items[i].Quantity);
+                Product SanPham = order.Items[i].Item;
+                int SoLuong = order.Items[i].Quantity;
+
+                Product SPTonKho = FindProductById(SanPham.ProductId);
+                SPTonKho.ReduceStock(SoLuong);
             }
 
             Orders.Add(order);
@@ -196,6 +201,34 @@ namespace OOP_CSharp
             return Lst_DonHang;
         }
 
+        public List<string> ThongTinKH(string name)
+        {
+            List<string> Lst_Info = new List<string>();
+            for (int i = 0; i < Orders.Count; i++)
+            {
+                if (Orders[i].CustomerName == name)
+                {
+                    Lst_Info.Add(Orders[i].OrderId);
+                    Lst_Info.Add(Orders[i].CustomerName);
+                    Lst_Info.Add(Orders[i].Discount.ToString());
+                    break;
+                }
+            }
+            return Lst_Info;
+        }
+
+        public string NewOrderID()
+        {
+            int MaDH = Orders.Count;
+            for (int i = 0; i < Orders.Count; i++)
+            {
+                if (Orders.Count <= 0)
+                {
+                    return "DH001";
+                }
+            }
+            return $"DH00{MaDH + 1}";
+        }
 
         public List<Product> CheckStock(int SoLuong)
         {

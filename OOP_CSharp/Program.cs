@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -135,48 +136,121 @@ namespace OOP_CSharp
 
 
 
-            Order DonHang = new Order(id: "DH001", customer: "Nguyễn Văn Cường", discount: 0);
-            DonHang.AddItem(new Laptop("LP002", "MacBook Pro 14", 55000000, 3, "M2 Pro", 16, "Integrated"), 3);
-            DonHang.AddItem(new Smartphone("SP004", "Oppo Reno", 12000000, 8, "6.4", 64), 2);
+            //Order DonHang = new Order(id: "DH001", customer: "Nguyễn Văn Cường", discount: 0);
+            //DonHang.AddItem(new Laptop("LP002", "MacBook Pro 14", 55000000, 3, "M2 Pro", 16, "Integrated"), 3);
+            //DonHang.AddItem(new Smartphone("SP004", "Oppo Reno", 12000000, 8, "6.4", 64), 2);
 
-            if (shop.PlaceOrder(DonHang))
+            //if (shop.PlaceOrder(DonHang))
+            //{
+            //    Console.WriteLine("Đặt hàng thành công");               
+            //}
+            //else if (shop.PlaceOrder(DonHang) == false)
+            //{
+            //    Console.WriteLine("Đặt hàng không thành công");
+            //}
+
+
+         
+            while (true)
             {
-                Console.WriteLine("Đặt hàng thành công");               
+                bool KT_Huy = false;
+                Console.WriteLine("Nhập lựa chọn (1) Thêm đơn hàng, (2) Hủy");
+                string LuaChon = Console.ReadLine();
+
+                if (LuaChon == "1")
+                {
+                    Console.WriteLine("Nhập tên khách hàng: ");
+                    string HoTen = Console.ReadLine();
+                    Order DonHang = new Order(id: shop.NewOrderID(), customer: HoTen, discount: 0);
+                    for (int i = 0; i < shop.ThongTinKH(HoTen).Count; i++)
+                    {
+                        if (shop.ThongTinKH(HoTen).Count > 0)
+                        {                            
+                            break;
+                        }
+                        else if (shop.ThongTinKH(HoTen)[1] == HoTen)
+                        {
+                            DonHang = new Order(id: shop.ThongTinKH(HoTen)[0], customer: HoTen, discount: int.Parse(shop.ThongTinKH(HoTen)[2]));
+                            break;
+                        }
+                    }
+
+                    while (true)
+                    {
+                        Console.Write("Nhập mã sản phẩm (Enter để dừng): ");
+                        string ID = Console.ReadLine();
+
+                        if (string.IsNullOrWhiteSpace(ID.ToUpper()))
+                        {
+                            break;
+                        }
+
+                        Product SP = shop.FindProductById(ID.ToUpper());
+                        if (SP == null)
+                        {
+                            Console.WriteLine("Không tìm thấy sản phẩm, mời nhập lại.");
+                            continue;
+                        }
+
+                        Console.Write("Nhập số lượng: ");
+                        int SoLuong;
+                        if (!int.TryParse(Console.ReadLine(), out SoLuong) || SoLuong <= 0)
+                        {
+                            Console.WriteLine("Số lượng không hợp lệ.");
+                            continue;
+                        }
+                        if (!DonHang.AddItem(SP, SoLuong))
+                        {
+                            Console.WriteLine("Không đủ hàng cho sản phẩm này.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Đã thêm sản phẩm vào đơn.");
+                        }
+
+                        Console.WriteLine();
+                        Console.WriteLine("Chọn thao tác tiếp theo:");
+                        Console.WriteLine("(1) Thêm món khác, (2) Hoàn tất đơn này, (Nút bất kỳ) Hủy toàn bộ đơn");                        
+                        Console.Write("Lựa chọn: ");
+                        LuaChon = Console.ReadLine();
+
+                        if (LuaChon == "1")
+                        {
+                            continue;
+                        }
+                        else if (LuaChon == "2")
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            KT_Huy = true;
+                            break;
+                        }
+                    }
+
+                    if (KT_Huy == true || DonHang.Items.Count == 0)
+                    {
+                        Console.WriteLine("Đơn hàng đã bị hủy hoặc không có sản phẩm nào");
+                    }
+                    else
+                    {
+                        if (shop.PlaceOrder(DonHang))
+                        {
+                            Console.WriteLine("Đặt hàng thành công");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Đặt hàng không thành công");
+                        }
+                    }
+                }
+
+                else if (LuaChon == "2")
+                    break;
+                
             }
-            else if (shop.PlaceOrder(DonHang) == false)
-            {
-                Console.WriteLine("Đặt hàng không thành công");
-            }
-
-
-
-            DonHang = new Order(id: "DH002", customer: "Trịnh Trần Phương Tuấn", discount: 10);
-            DonHang.AddItem(new Laptop("LP003", "Asus ROG", 42000000, 4, "Ryzen 9", 32, "RTX 3070"), 1);
-            DonHang.AddItem(new Smartphone("SP003", "Xiaomi 14", 15000000, 15, "6.36", 50), 100);
-
-            if (shop.PlaceOrder(DonHang))
-            {
-                Console.WriteLine("Đặt hàng thành công");
-                shop.Orders.Add(DonHang);
-            }
-            else if (shop.PlaceOrder(DonHang) == false)
-            {
-                Console.WriteLine("Đặt hàng không thành công");
-            }
-
-
-            DonHang = new Order(id: "DH003", customer: "Nguyễn Văn Cường", discount: 0);
-            DonHang.AddItem(new Laptop("LP004", "HP Spectre", 30000000, 12, "i5-1235U", 8, "Iris Xe"), 3);
-            DonHang.AddItem(new Smartphone("SP002", "Samsung S24", 22000000, 14, "6.2", 50), 2);
-
-            if (shop.PlaceOrder(DonHang))
-            {
-                Console.WriteLine("Đặt hàng thành công");                
-            }
-            else if (shop.PlaceOrder(DonHang) == false)
-            {
-                Console.WriteLine("Đặt hàng không thành công");
-            }
+            
 
 
 
