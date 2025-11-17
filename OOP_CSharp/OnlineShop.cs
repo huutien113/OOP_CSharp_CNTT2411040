@@ -18,7 +18,7 @@ namespace OOP_CSharp
             {
                 if (Products[i].ProductId == sp.ProductId)
                 {
-                    Products[i].StockQuantity += sp.StockQuantity;
+                    Products[i].IncreaseStock(sp.StockQuantity);
                     return;
                 }
             }
@@ -39,6 +39,7 @@ namespace OOP_CSharp
 
         public bool PlaceOrder(Order order)
         {
+            // Kiểm tra tồn kho THỰC TẾ trong shop.Products
             for (int i = 0; i < order.Items.Count; i++)
             {
                 Product SPTonKho = FindProductById(order.Items[i].Item.ProductId);
@@ -48,17 +49,15 @@ namespace OOP_CSharp
                 }
                 else if (SPTonKho.StockQuantity < order.Items[i].Quantity)
                 {
-                    return false;
+                    return false; // Sẽ return false khi kiểm tra SP003: 15 < 100
                 }
             }
 
+            // Chỉ chạy đến đây nếu ĐỦ HÀNG
             for (int i = 0; i < order.Items.Count; i++)
             {
-                Product SanPham = order.Items[i].Item;
-                int SoLuong = order.Items[i].Quantity;
-
-                Product SPTonKho = FindProductById(SanPham.ProductId);
-                SPTonKho.ReduceStock(SoLuong);
+                Product SPTonKho = FindProductById(order.Items[i].Item.ProductId);
+                SPTonKho.ReduceStock(order.Items[i].Quantity);
             }
 
             Orders.Add(order);
@@ -95,6 +94,10 @@ namespace OOP_CSharp
             List<Product> Lst_Top = new List<Product>();
             Dictionary<string, int> ThongKe = new Dictionary<string, int>();
 
+            if (Orders.Count < topCount)
+            {
+                return Lst_Top;
+            }
             for (int i = 0; i < Orders.Count; i++)
             {
                 for (int j = 0; j < Orders[i].Items.Count; j++)

@@ -114,55 +114,70 @@ namespace OOP_CSharp
 
             OnlineShop shop = new OnlineShop();
 
-            Laptop a = new Laptop("LP001", "Dell XPS 15", 35000000, 5, "i7-12700H", 16, "RTX 3050");
+            Laptop a = new Laptop("LP001", "Dell XPS 15", 35000000, 15, "i7-12700H", 16, "RTX 3050");
             shop.AddProduct(a);
-            a = new Laptop("LP002", "MacBook Pro 14", 55000000, 3, "M2 Pro", 16, "Integrated");
+            a = new Laptop("LP002", "MacBook Pro 14", 55000000, 13, "M2 Pro", 16, "Integrated");
             shop.AddProduct(a);
-            a = new Laptop("LP003", "Asus ROG", 42000000, 1, "Ryzen 9", 32, "RTX 3070");
+            a = new Laptop("LP003", "Asus ROG", 42000000, 11, "Ryzen 9", 32, "RTX 3070");
             shop.AddProduct(a);
-            a = new Laptop("LP004", "HP Spectre", 30000000, 2, "i5-1235U", 8, "Iris Xe");
+            a = new Laptop("LP004", "HP Spectre", 30000000, 12, "i5-1235U", 8, "Iris Xe");
             shop.AddProduct(a);
 
 
-            Smartphone b = new Smartphone("SP001", "iPhone 15", 25000000, 10, "6.1", 48);
+            Smartphone b = new Smartphone("SP001", "iPhone 15", 25000000, 16, "6.1", 48);
             shop.AddProduct(b);
-            b = new Smartphone("SP002", "Samsung S24", 22000000, 1, "6.2", 50);
+            b = new Smartphone("SP002", "Samsung S24", 22000000, 14, "6.2", 50);
             shop.AddProduct(b);
             b = new Smartphone("SP003", "Xiaomi 14", 15000000, 15, "6.36", 50);
             shop.AddProduct(b);
-            b = new Smartphone("SP004", "Oppo Reno", 12000000, 5, "6.4", 64);
+            b = new Smartphone("SP004", "Oppo Reno", 12000000, 17, "6.4", 64);
             shop.AddProduct(b);
 
 
 
-            Order DonHang_1 = new Order(id: "DH001", customer: "Nguyễn Văn Cường", discount: 0);
-            DonHang_1.AddItem(new Laptop("LP002", "MacBook Pro 14", 55000000, 3, "M2 Pro", 16, "Integrated"), 3);
-            DonHang_1.AddItem(new Smartphone("SP004", "Oppo Reno", 12000000, 8, "6.4", 64), 2);
+            Order DonHang = new Order(id: "DH001", customer: "Nguyễn Văn Cường", discount: 0);
+            DonHang.AddItem(new Laptop("LP002", "MacBook Pro 14", 55000000, 3, "M2 Pro", 16, "Integrated"), 3);
+            DonHang.AddItem(new Smartphone("SP004", "Oppo Reno", 12000000, 8, "6.4", 64), 2);
 
-            if (shop.PlaceOrder(DonHang_1))
+            if (shop.PlaceOrder(DonHang))
+            {
+                Console.WriteLine("Đặt hàng thành công");               
+            }
+            else if (shop.PlaceOrder(DonHang) == false)
+            {
+                Console.WriteLine("Đặt hàng không thành công");
+            }
+
+
+
+            DonHang = new Order(id: "DH002", customer: "Trịnh Trần Phương Tuấn", discount: 10);
+            DonHang.AddItem(new Laptop("LP003", "Asus ROG", 42000000, 4, "Ryzen 9", 32, "RTX 3070"), 1);
+            DonHang.AddItem(new Smartphone("SP003", "Xiaomi 14", 15000000, 15, "6.36", 50), 100);
+
+            if (shop.PlaceOrder(DonHang))
             {
                 Console.WriteLine("Đặt hàng thành công");
-                shop.Orders.Add(DonHang_1);
+                shop.Orders.Add(DonHang);
             }
-            else if (shop.PlaceOrder(DonHang_1) == false)
+            else if (shop.PlaceOrder(DonHang) == false)
             {
                 Console.WriteLine("Đặt hàng không thành công");
             }
 
 
-            Order DonHang_2 = new Order(id: "DH002", customer: "Trịnh Trần Phương Tuấn", discount: 10);
-            DonHang_2.AddItem(new Laptop("LP003", "Asus ROG", 42000000, 4, "Ryzen 9", 32, "RTX 3070"), 1);
-            DonHang_2.AddItem(new Smartphone("SP003", "Xiaomi 14", 15000000, 15, "6.36", 50), 1);
+            DonHang = new Order(id: "DH003", customer: "Nguyễn Văn Cường", discount: 0);
+            DonHang.AddItem(new Laptop("LP004", "HP Spectre", 30000000, 12, "i5-1235U", 8, "Iris Xe"), 3);
+            DonHang.AddItem(new Smartphone("SP002", "Samsung S24", 22000000, 14, "6.2", 50), 2);
 
-            if (shop.PlaceOrder(DonHang_2))
+            if (shop.PlaceOrder(DonHang))
             {
-                Console.WriteLine("Đặt hàng thành công");
-                shop.Orders.Add(DonHang_2);
+                Console.WriteLine("Đặt hàng thành công");                
             }
-            else if (shop.PlaceOrder(DonHang_2) == false)
+            else if (shop.PlaceOrder(DonHang) == false)
             {
                 Console.WriteLine("Đặt hàng không thành công");
             }
+
 
 
             for (int i = 0; i < shop.Orders.Count; i++)
@@ -178,13 +193,17 @@ namespace OOP_CSharp
             //Console.WriteLine($"Tổng doanh thu từ ngày... tới ....: {shop.CalculateRevenue(from, to)}");
 
             int Top = 3;
-            shop.GetBestSellingProducts(Top); 
+            shop.GetBestSellingProducts(Top);
+            Console.WriteLine("Top những sản phẩm bán chạy:");
             for (int i = 0; i < Top; i++)
             {
-                Console.WriteLine($"Top {i+1} { shop.GetBestSellingProducts(Top)[i].GetInfo()}");
+                if (shop.GetBestSellingProducts(Top).Count >= Top)
+                {
+                    Console.WriteLine($"Top {i + 1} {shop.GetBestSellingProducts(Top)[i].GetInfo()}");
+                }              
             }
 
-
+            Console.WriteLine("Thống kê doanh thu theo loại SP:");
             Dictionary<string, double> ThongKe = shop.RevenueByCategory();
             for (int i = 0; i < ThongKe.Count; i++)
             {
@@ -196,18 +215,21 @@ namespace OOP_CSharp
 
             Console.WriteLine("---------------------------");
 
-            List<Order> DonHang = shop.GetOrdersByCustomerName("Nguyễn Văn Cường");
+            List<Order> Lst_DonHang = shop.GetOrdersByCustomerName("Nguyễn Văn Cường");
             Console.WriteLine("Đơn hàng khách hàng:");
-            for (int i = 0; i < DonHang.Count; i++)
+            for (int i = 0; i < Lst_DonHang.Count; i++)
             {
-                Console.WriteLine($"{DonHang[i].GetOrderDetail()}");
+                Console.WriteLine($"{Lst_DonHang[i].GetOrderDetail()}");
             }
 
             Console.WriteLine("---------------------------");
 
-            for (int i = 0; i < shop.CheckStock(3).Count; i++)
+
+            int KtSL = 15;
+            Console.WriteLine($"Những sản phẩm còn tồn kho với số lượng < {KtSL}");
+            for (int i = 0; i < shop.CheckStock(KtSL).Count; i++)
             {
-                Console.WriteLine(shop.CheckStock(3)[i].GetInfo());
+                Console.WriteLine(shop.CheckStock(KtSL)[i].GetInfo());
             }
         }
     }
