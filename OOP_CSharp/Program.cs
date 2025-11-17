@@ -225,13 +225,29 @@ namespace OOP_CSharp
                         else
                         {
                             KT_Huy = true;
+
                             break;
                         }
                     }
 
                     if (KT_Huy == true || DonHang.Items.Count == 0)
                     {
-                        Console.WriteLine("Đơn hàng đã bị hủy hoặc không có sản phẩm nào");
+                        if (KT_Huy == true && DonHang.Items.Count > 0)
+                        {
+                            for (int i = 0; i < DonHang.Items.Count; i++)
+                            {
+                                Product SP = shop.FindProductById(DonHang.Items[i].Item.ProductId);
+                                if (SP != null)
+                                {
+                                    SP.IncreaseStock(DonHang.Items[i].Quantity);
+                                }
+                            }
+                            Console.WriteLine("Đơn hàng đã bị hủy");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Đơn hàng không có sản phẩm nào");
+                        }
                     }
                     else
                     {
