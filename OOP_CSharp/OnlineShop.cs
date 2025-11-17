@@ -41,29 +41,22 @@ namespace OOP_CSharp
         {
             if (order == null || order.Items.Count == 0)
                 return false;
-            for (int i = 0; i < order.Items.Count; i++)
-            {
-                Product SanPham = order.Items[i].Item;
-                int SoLuong = order.Items[i].Quantity;
+            //for (int i = 0; i < order.Items.Count; i++)
+            //{
+            //    Product SanPham = order.Items[i].Item;
+            //    int SoLuong = order.Items[i].Quantity;
 
-                Product SPTonKho = FindProductById(SanPham.ProductId);
-                if (SPTonKho == null)
-                {
-                    return false;
-                }
-                if (SPTonKho.StockQuantity < SoLuong)
-                {
-                    return false;
-                }
-            }
-            for (int i = 0; i < order.Items.Count; i++)
-            {
-                Product SanPham = order.Items[i].Item;
-                int SoLuong = order.Items[i].Quantity;
-
-                Product SPTonKho = FindProductById(SanPham.ProductId);
-                SPTonKho.ReduceStock(SoLuong);
-            }
+            //    Product SPTonKho = FindProductById(SanPham.ProductId);
+            //    if (SPTonKho == null)
+            //    {
+            //        return false;
+            //    }
+            //    if (SPTonKho.StockQuantity < SoLuong)
+            //    {
+            //        return false;
+            //    }
+            //}
+            
 
             Orders.Add(order);
             return true;
