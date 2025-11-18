@@ -57,32 +57,58 @@ namespace thi_thu_csharp
       
         public bool ThemHoaDonMuaSach(HoaDonMuaSach hd)
         {
-
+            // Kiểm tra xem độc giả có tồn tại trong danh sách không
+            bool docGiaTonTai = false;
             foreach (var dg in danhSachDocGia)
             {
-                if (dg.MaDG != hd.MaDG)
-                { return false; }
-                
-                   
+                if (dg.MaDG == hd.MaDG)
+                {
+                    docGiaTonTai = true;
+                    break;
+                }
+            }
+            
+            if (!docGiaTonTai)
+            {
+                return false;
             }
 
+            // Kiểm tra từng chi tiết hóa đơn
             foreach (var chiTiet in hd.ChiTiet)
             {
+                bool sachTonTai = false;
                 foreach(var sach in danhSachSach)
                 {
                     if (sach.MaSach == chiTiet.MaSach)
                     {
-                        if (sach.SoLuongTon < chiTiet.SoLuong || chiTiet.SoLuong <= 0)
+                        sachTonTai = true;
+                        
+                        // Kiểm tra số lượng hợp lệ
+                        if (chiTiet.SoLuong <= 0)
                         {
-                            if (chiTiet.DonGia < (sach.GiaNhap * 1.1))
-                            {
-
-                                return false;
-                            }
-
-
+                            return false;
                         }
+                        
+                        // Kiểm tra tồn kho
+                        if (sach.SoLuongTon < chiTiet.SoLuong)
+                        {
+                            return false;
+                        }
+                        
+                        // Kiểm tra đơn giá bán phải >= giá nhập * 1.1
+                        if (chiTiet.DonGia < (sach.GiaNhap * 1.1))
+                        {
+                            return false;
+                        }
+                        
+                        break;
                     }
+                }
+                
+                // Nếu sách không tồn tại trong danh sách
+                if (!sachTonTai)
+                {
+                    return false;
                 }
             }
            
