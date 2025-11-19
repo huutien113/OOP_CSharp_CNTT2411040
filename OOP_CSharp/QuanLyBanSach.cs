@@ -105,53 +105,45 @@ namespace thi_thu_csharp
             double maxThanhToan = 0;
             DocGia docGiaMuaNhieuNhat = null;
 
-          
-            foreach (var hd in danhSachHoaDon)
+            // Duyệt qua từng độc giả để tính tổng tiền của tất cả hóa đơn
+            foreach (var docGia in danhSachDocGia)
             {
-               
-                if (hd.NgayMua.Month == thang && hd.NgayMua.Year == nam)
+                double tongTienDocGia = 0;
+
+                // Tìm tất cả hóa đơn của độc giả này trong tháng/năm
+                foreach (var hd in danhSachHoaDon)
                 {
-                   
-                    double tongTienChiTiet = 0;
-                    foreach (var chiTiet in hd.ChiTiet)
+                    if (hd.MaDG == docGia.MaDG && hd.NgayMua.Month == thang && hd.NgayMua.Year == nam)
                     {
-                        tongTienChiTiet += chiTiet.DonGia * chiTiet.SoLuong;
-                    }
-
-                   
-                    DocGia docGia = null;
-                    foreach (var dg in danhSachDocGia)
-                    {
-                        if (dg.MaDG == hd.MaDG)
+                        // Tính tổng tiền chi tiết của hóa đơn
+                        double tongTienChiTiet = 0;
+                        foreach (var chiTiet in hd.ChiTiet)
                         {
-                            docGia = dg;
-                            break;
+                            tongTienChiTiet += chiTiet.DonGia * chiTiet.SoLuong;
                         }
+
+                        // Áp dụng chiết khấu theo loại độc giả
+                        double chietKhau = 0;
+                        if (chietkhautheoloai.ContainsKey(docGia.LoaiDG))
+                        {
+                            chietKhau = chietkhautheoloai[docGia.LoaiDG];
+                        }
+
+                        double tienThanhToanThucTe = tongTienChiTiet * (1 - chietKhau);
+                        
+                        // Cộng dồn vào tổng tiền của độc giả
+                        tongTienDocGia += tienThanhToanThucTe;
                     }
+                }
 
-                  
-                    if (docGia == null)
-                        continue;
-
-                  
-                    double chietKhau = 0;
-                    if (chietkhautheoloai.ContainsKey(docGia.LoaiDG))
-                    {
-                        chietKhau = chietkhautheoloai[docGia.LoaiDG];
-                    }
-
-                    double tienThanhToanThucTe = tongTienChiTiet * (1 - chietKhau);
-
-                 
-                    if (tienThanhToanThucTe > maxThanhToan)
-                    {
-                        maxThanhToan = tienThanhToanThucTe;
-                        docGiaMuaNhieuNhat = docGia;
-                    }
+                // So sánh tổng tiền của độc giả với max
+                if (tongTienDocGia > maxThanhToan)
+                {
+                    maxThanhToan = tongTienDocGia;
+                    docGiaMuaNhieuNhat = docGia;
                 }
             }
 
-           
             return docGiaMuaNhieuNhat; 
         }
 
