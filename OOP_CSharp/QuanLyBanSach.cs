@@ -60,11 +60,15 @@ namespace thi_thu_csharp
 
             foreach (var dg in danhSachDocGia)
             {
-                if (dg.MaDG != hd.MaDG)
-                { return false; }
+                if (dg.MaDG== hd.MaDG)
+                { 
+                    return true;
+                    
+                }
                 
                    
             }
+            
 
             foreach (var chiTiet in hd.ChiTiet)
             {
@@ -72,16 +76,17 @@ namespace thi_thu_csharp
                 {
                     if (sach.MaSach == chiTiet.MaSach)
                     {
-                        if (sach.SoLuongTon < chiTiet.SoLuong || chiTiet.SoLuong <= 0)
-                        {
-                            if (chiTiet.DonGia < (sach.GiaNhap * 1.1))
-                            {
+                       
+                        if (chiTiet.SoLuong <= 0)
+                            return false;
 
-                                return false;
-                            }
+                        
+                        if (sach.SoLuongTon < chiTiet.SoLuong)
+                            return false;
 
-
-                        }
+                        
+                        if (chiTiet.DonGia < (sach.GiaNhap * 1.1))
+                            return false;
                     }
                 }
             }
