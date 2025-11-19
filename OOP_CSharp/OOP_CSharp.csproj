@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="CB.cs" />
     <Compile Include="CBVC.cs" />
+    <Compile Include="classesLibHTTT.cs" />
     <Compile Include="classLib.cs" />
     <Compile Include="classLib2.cs" />
     <Compile Include="Company.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="PhuongTien.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QuanLyCuaHang.cs" />
     <Compile Include="QuanLyCongTy.cs" />
     <Compile Include="ZeroException.cs" />
   </ItemGroup>

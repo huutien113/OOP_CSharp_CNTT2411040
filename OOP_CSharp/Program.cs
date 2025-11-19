@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using ConsoleApp1;
 using ConsoleApplication3;
+using KTGK_CSharp;
 
 namespace OOP_CSharp
 {
@@ -150,177 +151,50 @@ namespace OOP_CSharp
             //}
 
 
-         
-            while (true)
-            {
-                bool KT_Huy = false;
-                Console.WriteLine("Nhập lựa chọn (1) Thêm đơn hàng, (2) Hủy");
-                string LuaChon = Console.ReadLine();
 
-                if (LuaChon == "1")
-                {
-                    Console.WriteLine("Nhập tên khách hàng: ");
-                    string HoTen = Console.ReadLine();
-                    Order DonHang = new Order(id: shop.NewOrderID(), customer: HoTen, discount: 0);
-                    for (int i = 0; i < shop.ThongTinKH(HoTen).Count; i++)
-                    {
-                        if (shop.ThongTinKH(HoTen).Count > 0)
-                        {                            
-                            break;
-                        }
-                        else if (shop.ThongTinKH(HoTen)[1] == HoTen)
-                        {
-                            DonHang = new Order(id: shop.ThongTinKH(HoTen)[0], customer: HoTen, discount: int.Parse(shop.ThongTinKH(HoTen)[2]));
-                            break;
-                        }
-                    }
+            var ql = new QuanLyCuaHang();
 
-                    while (true)
-                    {
-                        Console.Write("Nhập mã sản phẩm (Enter để dừng): ");
-                        string ID = Console.ReadLine();
+            // Thêm sản phẩm
+            ql.CapNhatSoLuongTon(1, 10); // Không tồn tại → bỏ qua
+            var sp1 = new SanPham(1, "Bàn phím cơ RK", 850000, 10, "Royal Kludge");
+            var sp2 = new SanPham(2, "Chuột G Pro", 1200000, 8, "Logitech");
+            var sp3 = new SanPham(3, "Tai nghe WH-1000", 6500000, 3, "Sony");
+            ql.ThemSanPham(sp1);
+            ql.ThemSanPham(sp2);
+            ql.ThemSanPham(sp3);
 
-                        if (string.IsNullOrWhiteSpace(ID.ToUpper()))
-                        {
-                            break;
-                        }
+            // Thêm khách
+            var kh1 = new KhachHang("KH001", "Nguyễn Văn Út Mới", "Hà Nội", "VIP");
+            var kh2 = new KhachHang("KH002", "Trần Thị Thanh", "Đà Nẵng", "Thuong");
+            var kh3 = new KhachHang("KH003", "Lê Văn Tường", "TP.HCM", "Moi");
+            ql.ThemKhachHang(kh1);
+            ql.ThemKhachHang(kh2);
+            ql.ThemKhachHang(kh3);
 
-                        Product SP = shop.FindProductById(ID.ToUpper());
-                        if (SP == null)
-                        {
-                            Console.WriteLine("Không tìm thấy sản phẩm, mời nhập lại.");
-                            continue;
-                        }
+            // Tạo hóa đơn
+            var hd1 = new HoaDon(1001, "KH001", new DateTime(2025, 11, 10));
+            hd1.ChiTiet.Add(new ChiTietHoaDon(1, 2, 950000));   // OK
+            hd1.ChiTiet.Add(new ChiTietHoaDon(2, 1, 1350000));  // OK
 
-                        Console.Write("Nhập số lượng: ");
-                        int SoLuong;
-                        if (!int.TryParse(Console.ReadLine(), out SoLuong) || SoLuong <= 0)
-                        {
-                            Console.WriteLine("Số lượng không hợp lệ.");
-                            continue;
-                        }
-                        if (!DonHang.AddItem(SP, SoLuong))
-                        {
-                            Console.WriteLine("Không đủ hàng cho sản phẩm này.");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Đã thêm sản phẩm vào đơn.");
-                        }
+            var hd2 = new HoaDon(1002, "KH002", new DateTime(2025, 11, 12));
+            hd2.ChiTiet.Add(new ChiTietHoaDon(3, 1, 7200000));  // OK
 
-                        Console.WriteLine();
-                        Console.WriteLine("Chọn thao tác tiếp theo:");
-                        Console.WriteLine("(1) Thêm món khác, (2) Hoàn tất đơn này, (Nút bất kỳ) Hủy toàn bộ đơn");                        
-                        Console.Write("Lựa chọn: ");
-                        LuaChon = Console.ReadLine();
+            var hd3 = new HoaDon(1003, "KH003", new DateTime(2025, 11, 15));
+            hd3.ChiTiet.Add(new ChiTietHoaDon(1, 15, 900000));  // Lỗi: vượt tồn kho
 
-                        if (LuaChon == "1")
-                        {
-                            continue;
-                        }
-                        else if (LuaChon == "2")
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            KT_Huy = true;
+            // Thêm hóa đơn
+            ql.ThemHoaDon(hd1);
+            ql.ThemHoaDon(hd2);
+            ql.ThemHoaDon(hd3); // Bị từ chối
 
-                            break;
-                        }
-                    }
-
-                    if (KT_Huy == true || DonHang.Items.Count == 0)
-                    {
-                        if (KT_Huy == true && DonHang.Items.Count > 0)
-                        {
-                            for (int i = 0; i < DonHang.Items.Count; i++)
-                            {
-                                Product SP = shop.FindProductById(DonHang.Items[i].Item.ProductId);
-                                if (SP != null)
-                                {
-                                    SP.IncreaseStock(DonHang.Items[i].Quantity);
-                                }
-                            }
-                            Console.WriteLine("Đơn hàng đã bị hủy");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Đơn hàng không có sản phẩm nào");
-                        }
-                    }
-                    else
-                    {
-                        if (shop.PlaceOrder(DonHang))
-                        {
-                            Console.WriteLine("Đặt hàng thành công");
-                        }
-                        else
-                        {
-                            Console.WriteLine("Đặt hàng không thành công");
-                        }
-                    }
-                }
-
-                else if (LuaChon == "2")
-                    break;
-                
-            }
-            
+            // Thống kê
+            var khTop = ql.ThongKeKhachHangMuaNhieuNhat(11, 2025);
+            if (khTop != null)
+                Console.WriteLine("Khách mua nhiều nhất: " + khTop.HoTen);
+            else
+                Console.WriteLine("Không có khách mua hàng vào thời gian này!");
 
 
-
-            for (int i = 0; i < shop.Orders.Count; i++)
-            {
-                Console.WriteLine(shop.Orders[i].GetOrderDetail());
-            }
-
-            //Console.Write("Từ (dd/MM/yyyy): ");
-            //DateTime from = DateTime.ParseExact(Console.ReadLine(), "dd/MM/yyyy", null);
-            //Console.Write("Đến (dd/MM/yyyy): ");
-            //DateTime to = DateTime.ParseExact(Console.ReadLine(), "dd/MM/yyyy", null);
-
-            //Console.WriteLine($"Tổng doanh thu từ ngày... tới ....: {shop.CalculateRevenue(from, to)}");
-
-            int Top = 3;
-            shop.GetBestSellingProducts(Top);
-            Console.WriteLine("Top những sản phẩm bán chạy:");
-            for (int i = 0; i < Top; i++)
-            {
-                if (shop.GetBestSellingProducts(Top).Count >= Top)
-                {
-                    Console.WriteLine($"Top {i + 1} {shop.GetBestSellingProducts(Top)[i].GetInfo()}");
-                }              
-            }
-
-            Console.WriteLine("Thống kê doanh thu theo loại SP:");
-            Dictionary<string, double> ThongKe = shop.RevenueByCategory();
-            for (int i = 0; i < ThongKe.Count; i++)
-            {
-                string key = ThongKe.ElementAt(i).Key;
-                double value = ThongKe.ElementAt(i).Value;
-
-                Console.WriteLine($"{key}: {value}");
-            }
-
-            Console.WriteLine("---------------------------");
-
-            List<Order> Lst_DonHang = shop.GetOrdersByCustomerName("Nguyễn Văn Cường");
-            Console.WriteLine("Đơn hàng khách hàng:");
-            for (int i = 0; i < Lst_DonHang.Count; i++)
-            {
-                Console.WriteLine($"{Lst_DonHang[i].GetOrderDetail()}");
-            }
-
-            Console.WriteLine("---------------------------");
-
-
-            int KtSL = 15;
-            Console.WriteLine($"Những sản phẩm còn tồn kho với số lượng < {KtSL}");
-            for (int i = 0; i < shop.CheckStock(KtSL).Count; i++)
-            {
-                Console.WriteLine(shop.CheckStock(KtSL)[i].GetInfo());
-            }
         }
     }
 }
