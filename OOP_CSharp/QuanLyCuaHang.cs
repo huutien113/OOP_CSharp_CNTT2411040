@@ -75,110 +75,171 @@ namespace OOP_CSharp
             return Lst_SanPham;
         }
 
-        public bool ThemHoaDon(HoaDon hd)
+        public void ThemHoaDon(HoaDon hd)
         {
-            bool KT = false;
-            for (int i = 0; i < DanhSachHD.Count; i++)
+            // Kiểm tra mã khách hàng phải tồn tại
+            bool khachHangTonTai = false;
+            for (int i = 0; i < DanhSachKH.Count; i++)
             {
-                if (hd.MaKH == DanhSachHD[i].MaKH)
+                if (hd.MaKH == DanhSachKH[i].MaKH)
                 {
-                    KT = true;
-                }
-            }
-
-            for (int i = 0; i < hd.ChiTiet.Count; i++)
-            {
-                for (int j = 0; j < DanhSachSP.Count; j++)
-                {
-                    if (hd.ChiTiet[i].MaSP == DanhSachSP[j].MaSP && hd.ChiTiet[i].SoLuongBan >= DanhSachSP[j].SoLuongTon && hd.ChiTiet[i].DonGiaBan >= DanhSachSP[j].GiaNhap * 1.1)
-                    {
-                        KT = true;
-                        break;
-                    }
-                }
-                if (KT == true)
-                {
+                    khachHangTonTai = true;
                     break;
                 }
             }
-
-            if (KT == true)
+            if (!khachHangTonTai)
             {
-                KT = false;
-                for (int i = 0; i < hd.ChiTiet.Count; i++)
+                return; // Hủy, không thêm
+            }
+
+            // Kiểm tra tất cả chi tiết hóa đơn
+            for (int i = 0; i < hd.ChiTiet.Count; i++)
+            {
+                ChiTietHoaDon ct = hd.ChiTiet[i];
+                
+                // Kiểm tra số lượng bán > 0
+                if (ct.SoLuongBan <= 0)
                 {
-                    for (int j = 0; j < DanhSachSP.Count; j++)
+                    return; // Hủy, không thêm
+                }
+                
+                // Tìm sản phẩm
+                SanPham sp = null;
+                for (int j = 0; j < DanhSachSP.Count; j++)
+                {
+                    if (DanhSachSP[j].MaSP == ct.MaSP)
                     {
-                        if (hd.ChiTiet[i].MaSP == DanhSachSP[j].MaSP)
-                        {
-                            DanhSachSP[j].SoLuongTon -= hd.ChiTiet[i].SoLuongBan;
-                            KT = true;
-                            break;
-                        }
+                        sp = DanhSachSP[j];
+                        break;
                     }
-                    if (KT == true)
+                }
+                
+                // Kiểm tra mã sản phẩm phải tồn tại
+                if (sp == null)
+                {
+                    return; // Hủy, không thêm
+                }
+                
+                // Kiểm tra số lượng không vượt tồn kho
+                if (ct.SoLuongBan > sp.SoLuongTon)
+                {
+                    return; // Hủy, không thêm
+                }
+                
+                // Kiểm tra đơn giá bán >= giá nhập * 1.1
+                if (ct.DonGiaBan < sp.GiaNhap * 1.1)
+                {
+                    return; // Hủy, không thêm
+                }
+            }
+
+            // Tất cả hợp lệ → Cập nhật tồn kho và thêm hóa đơn
+            for (int i = 0; i < hd.ChiTiet.Count; i++)
+            {
+                ChiTietHoaDon ct = hd.ChiTiet[i];
+                for (int j = 0; j < DanhSachSP.Count; j++)
+                {
+                    if (DanhSachSP[j].MaSP == ct.MaSP)
                     {
+                        DanhSachSP[j].SoLuongTon -= ct.SoLuongBan;
                         break;
                     }
                 }
             }
-
+            
             DanhSachHD.Add(hd);
-            return KT;
         }
 
         public KhachHang ThongKeKhachHangMuaNhieuNhat(int thang, int nam)
         {
-            List<KhachHang> Lst_KhachHang = new List<KhachHang>();
-            List<double> Lst_Tong = new List<double>();
-            double Tong = 0;
-            for (int i = 0; i < DanhSachKH.Count; i++)
+            // Lọc các hóa đơn trong tháng/năm
+            List<HoaDon> hoaDonThang = new List<HoaDon>();
+            for (int i = 0; i < DanhSachHD.Count; i++)
             {
                 if (DanhSachHD[i].NgayLap.Month == thang && DanhSachHD[i].NgayLap.Year == nam)
                 {
-                    Lst_KhachHang.Add(DanhSachKH[i]);
+                    hoaDonThang.Add(DanhSachHD[i]);
                 }
             }
-            if (Lst_KhachHang.Count <= 0)
+            
+            // Nếu không có hóa đơn nào
+            if (hoaDonThang.Count == 0)
             {
                 return null;
             }
-            double ChietKhau = 0;
-            for (int i = 0; i <= Lst_KhachHang.Count; i++)
-            {
-                for (int j = 0; i < DanhSachHD.Count; i++)
-                {
-                    if (Lst_KhachHang[i].MaKH == DanhSachHD[j].MaKH)
-                    {
-                        for (int k = 0; k < DanhSachHD[j].ChiTiet.Count; k++)
-                        {
-                            Tong = DanhSachHD[j].ChiTiet[k].DonGiaBan * DanhSachHD[j].ChiTiet[k].SoLuongBan;
-                        }
-                        if (ChietKhauTheoLoai.ContainsKey((Lst_KhachHang[i].LoaiKH)))
-                        {
-                            ChietKhau = 1- chietKhauTheoLoai[(Lst_KhachHang[i].LoaiKH)];
-                        }
-                        Lst_Tong.Add(Tong * ChietKhau);
-                    }
-                }
-            }
-            for (int i = 0; i < Lst_Tong.Count; i++)
-            {
-                for (int j = 0; j < Lst_Tong.Count - i - 1; j++)
-                {
-                    if (Lst_Tong[j] < Lst_Tong[j + 1])
-                    {
-                        double temp = Lst_Tong[j];
-                        Lst_Tong[j] = Lst_Tong[j + 1];
-                        Lst_Tong[j + 1] = temp;
 
-                        KhachHang tempKH = Lst_KhachHang[j];
-                        Lst_KhachHang[j] = Lst_KhachHang[j + 1];
-                        Lst_KhachHang[j + 1] = tempKH;
+            // Tính tổng tiền thanh toán thực tế của từng khách hàng
+            Dictionary<string, double> tongTienTheoKH = new Dictionary<string, double>();
+            
+            for (int i = 0; i < hoaDonThang.Count; i++)
+            {
+                HoaDon hd = hoaDonThang[i];
+                
+                // Tính tổng tiền chi tiết
+                double tongTienChiTiet = 0;
+                for (int j = 0; j < hd.ChiTiet.Count; j++)
+                {
+                    tongTienChiTiet += hd.ChiTiet[j].DonGiaBan * hd.ChiTiet[j].SoLuongBan;
+                }
+                
+                // Tìm khách hàng để lấy loại và chiết khấu
+                KhachHang kh = null;
+                for (int j = 0; j < DanhSachKH.Count; j++)
+                {
+                    if (DanhSachKH[j].MaKH == hd.MaKH)
+                    {
+                        kh = DanhSachKH[j];
+                        break;
+                    }
+                }
+                
+                if (kh != null)
+                {
+                    // Lấy chiết khấu theo loại khách hàng
+                    double chietKhau = 0;
+                    if (ChietKhauTheoLoai.ContainsKey(kh.LoaiKH))
+                    {
+                        chietKhau = ChietKhauTheoLoai[kh.LoaiKH];
+                    }
+                    
+                    // Tính tiền thanh toán thực tế
+                    double tienThanhToan = tongTienChiTiet * (1 - chietKhau);
+                    
+                    // Cộng dồn vào tổng của khách hàng
+                    if (tongTienTheoKH.ContainsKey(hd.MaKH))
+                    {
+                        tongTienTheoKH[hd.MaKH] += tienThanhToan;
+                    }
+                    else
+                    {
+                        tongTienTheoKH[hd.MaKH] = tienThanhToan;
                     }
                 }
             }
-            return Lst_KhachHang[0];
+            
+            // Tìm khách hàng có tổng tiền cao nhất
+            string maKHMax = null;
+            double tongMax = 0;
+            
+            foreach (var item in tongTienTheoKH)
+            {
+                if (maKHMax == null || item.Value > tongMax)
+                {
+                    maKHMax = item.Key;
+                    tongMax = item.Value;
+                }
+            }
+            
+            // Trả về đối tượng KhachHang
+            for (int i = 0; i < DanhSachKH.Count; i++)
+            {
+                if (DanhSachKH[i].MaKH == maKHMax)
+                {
+                    return DanhSachKH[i];
+                }
+            }
+            
+            return null;
         }
     }
 }
