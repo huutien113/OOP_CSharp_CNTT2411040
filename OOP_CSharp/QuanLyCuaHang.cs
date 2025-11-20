@@ -77,108 +77,141 @@ namespace OOP_CSharp
 
         public bool ThemHoaDon(HoaDon hd)
         {
-            bool KT = false;
-            for (int i = 0; i < DanhSachHD.Count; i++)
+            bool KTKH = false;
+
+            for (int i = 0; i < DanhSachKH.Count; i++)
             {
-                if (hd.MaKH == DanhSachHD[i].MaKH)
+                if (DanhSachKH[i].MaKH == hd.MaKH)
                 {
-                    KT = true;
+                    KTKH = true;
+                    break;
                 }
+            }
+
+            if (KTKH == false)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < hd.ChiTiet.Count; i++)
+            {
+                if (hd.ChiTiet[i].SoLuongBan <= 0)
+                {
+                    return false;
+                }
+
+                SanPham SP = null;
+
+                for (int j = 0; j < DanhSachSP.Count; j++)
+                {
+                    if (hd.ChiTiet[i].MaSP == DanhSachSP[j].MaSP)
+                    {
+                        SP = DanhSachSP[j];
+                        break;
+                    }
+                }
+
+                if (SP == null || SP.SoLuongTon < hd.ChiTiet[i].SoLuongBan || SP.GiaNhap * 1.1 > hd.ChiTiet[i].DonGiaBan)
+                {
+                    return false;
+                }
+
             }
 
             for (int i = 0; i < hd.ChiTiet.Count; i++)
             {
                 for (int j = 0; j < DanhSachSP.Count; j++)
                 {
-                    if (hd.ChiTiet[i].MaSP == DanhSachSP[j].MaSP && hd.ChiTiet[i].SoLuongBan >= DanhSachSP[j].SoLuongTon && hd.ChiTiet[i].DonGiaBan >= DanhSachSP[j].GiaNhap * 1.1)
+                    if (hd.ChiTiet[i].MaSP == DanhSachSP[j].MaSP)
                     {
-                        KT = true;
-                        break;
-                    }
-                }
-                if (KT == true)
-                {
-                    break;
-                }
-            }
-
-            if (KT == true)
-            {
-                KT = false;
-                for (int i = 0; i < hd.ChiTiet.Count; i++)
-                {
-                    for (int j = 0; j < DanhSachSP.Count; j++)
-                    {
-                        if (hd.ChiTiet[i].MaSP == DanhSachSP[j].MaSP)
-                        {
-                            DanhSachSP[j].SoLuongTon -= hd.ChiTiet[i].SoLuongBan;
-                            KT = true;
-                            break;
-                        }
-                    }
-                    if (KT == true)
-                    {
+                        DanhSachSP[j].SoLuongTon -= hd.ChiTiet[i].SoLuongBan;
                         break;
                     }
                 }
             }
 
             DanhSachHD.Add(hd);
-            return KT;
+            return true;
         }
 
         public KhachHang ThongKeKhachHangMuaNhieuNhat(int thang, int nam)
         {
-            List<KhachHang> Lst_KhachHang = new List<KhachHang>();
-            List<double> Lst_Tong = new List<double>();
-            double Tong = 0;
-            for (int i = 0; i < DanhSachKH.Count; i++)
+            List<HoaDon> Lst_HD = new List<HoaDon>();
+            for (int i = 0; i < DanhSachHD.Count; i++)
             {
                 if (DanhSachHD[i].NgayLap.Month == thang && DanhSachHD[i].NgayLap.Year == nam)
                 {
-                    Lst_KhachHang.Add(DanhSachKH[i]);
+                    Lst_HD.Add(DanhSachHD[i]);
                 }
             }
-            if (Lst_KhachHang.Count <= 0)
+            if (Lst_HD.Count <= 0)
             {
                 return null;
             }
-            double ChietKhau = 0;
-            for (int i = 0; i <= Lst_KhachHang.Count; i++)
-            {
-                for (int j = 0; i < DanhSachHD.Count; i++)
-                {
-                    if (Lst_KhachHang[i].MaKH == DanhSachHD[j].MaKH)
-                    {
-                        for (int k = 0; k < DanhSachHD[j].ChiTiet.Count; k++)
-                        {
-                            Tong = DanhSachHD[j].ChiTiet[k].DonGiaBan * DanhSachHD[j].ChiTiet[k].SoLuongBan;
-                        }
-                        if (ChietKhauTheoLoai.ContainsKey((Lst_KhachHang[i].LoaiKH)))
-                        {
-                            ChietKhau = 1- chietKhauTheoLoai[(Lst_KhachHang[i].LoaiKH)];
-                        }
-                        Lst_Tong.Add(Tong * ChietKhau);
-                    }
-                }
-            }
-            for (int i = 0; i < Lst_Tong.Count; i++)
-            {
-                for (int j = 0; j < Lst_Tong.Count - i - 1; j++)
-                {
-                    if (Lst_Tong[j] < Lst_Tong[j + 1])
-                    {
-                        double temp = Lst_Tong[j];
-                        Lst_Tong[j] = Lst_Tong[j + 1];
-                        Lst_Tong[j + 1] = temp;
 
-                        KhachHang tempKH = Lst_KhachHang[j];
-                        Lst_KhachHang[j] = Lst_KhachHang[j + 1];
-                        Lst_KhachHang[j + 1] = tempKH;
+            Dictionary<string, double> Dict_Tong = new Dictionary<string, double>();
+            
+            for (int i = 0; i < Lst_HD.Count; i++)
+            {
+                double Tong = 0;
+                for (int j = 0; j < Lst_HD[i].ChiTiet.Count; j++)
+                {
+                    Tong += Lst_HD[i].ChiTiet[j].SoLuongBan * Lst_HD[i].ChiTiet[j].DonGiaBan;
+                }
+
+                KhachHang KH = null;
+                for (int j = 0; j < DanhSachKH.Count; j++)
+                {
+                    if (DanhSachKH[j].MaKH == Lst_HD[i].MaKH)
+                    {
+                        KH = DanhSachKH[j];
+                        break;
+                    }
+                }
+
+                if (KH != null)
+                {
+                    double ChietKhau = 0;
+                    if (ChietKhauTheoLoai.ContainsKey(KH.LoaiKH))
+                    {
+                        ChietKhau = ChietKhauTheoLoai[KH.LoaiKH];
+                    }
+
+                    Tong = Tong * (1- ChietKhau);
+
+                    if (Dict_Tong.ContainsKey(Lst_HD[i].MaKH))
+                    {
+                        Dict_Tong[Lst_HD[i].MaKH] += Tong;
+                    }
+
+                    else
+                    {
+                        Dict_Tong[Lst_HD[i].MaKH] = Tong;
                     }
                 }
             }
-            return Lst_KhachHang[0];
+
+
+            string MaKHMAX = null;
+            double MaxTong = 0;
+            List<string> Key = Dict_Tong.Keys.ToList();
+            for (int i = 0; i < Dict_Tong.Count; i++)
+            {
+                if (MaKHMAX == null || Dict_Tong[Key[i]] > MaxTong)
+                {
+                    MaKHMAX = Key[i];
+                    MaxTong = Dict_Tong[Key[i]];
+                }
+            }
+
+            for (int i = 0; i < DanhSachKH.Count; i++)
+            {
+                if (MaKHMAX == DanhSachKH[i].MaKH)
+                {
+                    return DanhSachKH[i];
+                }
+            }
+            return null;
         }
     }
 }
