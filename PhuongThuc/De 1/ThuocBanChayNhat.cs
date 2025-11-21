@@ -12,11 +12,12 @@ namespace OOP_CSharp
     {
         public Thuoc ThuocBanChayNhat()
         {
-            if (DanhSachDT.Count == 0)
+            if (DanhSachThuoc.Count == 0 || DanhSachDT.Count == 0)
             {
                 return null;
             }
 
+            // Tính tổng số lượng bán cho từng thuốc
             List<int> Lst_MaThuoc = new List<int>();
             List<int> Lst_SoLuongBan = new List<int>();
 
@@ -54,23 +55,66 @@ namespace OOP_CSharp
                 return null;
             }
 
-            int maThuocMax = 0;
-            int maxSoLuong = 0;
-
-            for (int i = 0; i < Lst_MaThuoc.Count; i++)
+            // Sắp xếp theo số lượng bán giảm dần (bubble sort)
+            for (int i = 0; i < Lst_MaThuoc.Count - 1; i++)
             {
-                if (i == 0 || Lst_SoLuongBan[i] > maxSoLuong)
+                for (int j = i + 1; j < Lst_MaThuoc.Count; j++)
                 {
-                    maThuocMax = Lst_MaThuoc[i];
-                    maxSoLuong = Lst_SoLuongBan[i];
+                    if (Lst_SoLuongBan[i] < Lst_SoLuongBan[j])
+                    {
+                        // Swap số lượng bán
+                        int tempSL = Lst_SoLuongBan[i];
+                        Lst_SoLuongBan[i] = Lst_SoLuongBan[j];
+                        Lst_SoLuongBan[j] = tempSL;
+
+                        // Swap mã thuốc
+                        int tempMa = Lst_MaThuoc[i];
+                        Lst_MaThuoc[i] = Lst_MaThuoc[j];
+                        Lst_MaThuoc[j] = tempMa;
+                    }
                 }
             }
 
-            for (int i = 0; i < DanhSachThuoc.Count; i++)
+            // Lấy số lượng bán cao nhất (tương tự Lst_Luong trong GetTopHighestPaid)
+            List<int> Lst_SoLuong = new List<int>();
+            for (int i = 0; i < Lst_MaThuoc.Count; i++)
             {
-                if (DanhSachThuoc[i].MaThuoc == maThuocMax)
+                bool Kt = true;
+                
+                for (int j = 0; j < Lst_SoLuong.Count; j++)
                 {
-                    return DanhSachThuoc[i];
+                    if (Lst_SoLuongBan[i] == Lst_SoLuong[j])
+                    {
+                        Kt = false;
+                        break;
+                    }
+                }
+                
+                if (Kt == true)
+                {
+                    Lst_SoLuong.Add(Lst_SoLuongBan[i]);
+                }
+
+                if (Lst_SoLuong.Count >= 1)
+                {
+                    break;
+                }
+            }
+
+            int soLuongMax = Lst_SoLuong[Lst_SoLuong.Count - 1];
+
+            // Trả về thuốc đầu tiên có số lượng bán >= soLuongMax
+            for (int i = 0; i < Lst_MaThuoc.Count; i++)
+            {
+                if (Lst_SoLuongBan[i] >= soLuongMax)
+                {
+                    for (int j = 0; j < DanhSachThuoc.Count; j++)
+                    {
+                        if (DanhSachThuoc[j].MaThuoc == Lst_MaThuoc[i])
+                        {
+                            return DanhSachThuoc[j];
+                        }
+                    }
                 }
             }
 

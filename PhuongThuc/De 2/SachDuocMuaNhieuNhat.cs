@@ -12,11 +12,12 @@ namespace OOP_CSharp
     {
         public Sach SachDuocMuaNhieuNhat()
         {
-            if (DanhSachHDMS.Count == 0)
+            if (DanhSachSach.Count == 0 || DanhSachHDMS.Count == 0)
             {
                 return null;
             }
 
+            // Tính tổng số lượng bán cho từng sách
             List<int> Lst_MaSach = new List<int>();
             List<int> Lst_SoLuongBan = new List<int>();
 
@@ -54,23 +55,66 @@ namespace OOP_CSharp
                 return null;
             }
 
-            int maSachMax = 0;
-            int maxSoLuong = 0;
-
-            for (int i = 0; i < Lst_MaSach.Count; i++)
+            // Sắp xếp theo số lượng bán giảm dần (bubble sort)
+            for (int i = 0; i < Lst_MaSach.Count - 1; i++)
             {
-                if (i == 0 || Lst_SoLuongBan[i] > maxSoLuong)
+                for (int j = i + 1; j < Lst_MaSach.Count; j++)
                 {
-                    maSachMax = Lst_MaSach[i];
-                    maxSoLuong = Lst_SoLuongBan[i];
+                    if (Lst_SoLuongBan[i] < Lst_SoLuongBan[j])
+                    {
+                        // Swap số lượng bán
+                        int tempSL = Lst_SoLuongBan[i];
+                        Lst_SoLuongBan[i] = Lst_SoLuongBan[j];
+                        Lst_SoLuongBan[j] = tempSL;
+
+                        // Swap mã sách
+                        int tempMa = Lst_MaSach[i];
+                        Lst_MaSach[i] = Lst_MaSach[j];
+                        Lst_MaSach[j] = tempMa;
+                    }
                 }
             }
 
-            for (int i = 0; i < DanhSachSach.Count; i++)
+            // Lấy số lượng bán cao nhất (tương tự Lst_Luong trong GetTopHighestPaid)
+            List<int> Lst_SoLuong = new List<int>();
+            for (int i = 0; i < Lst_MaSach.Count; i++)
             {
-                if (DanhSachSach[i].MaSach == maSachMax)
+                bool Kt = true;
+                
+                for (int j = 0; j < Lst_SoLuong.Count; j++)
                 {
-                    return DanhSachSach[i];
+                    if (Lst_SoLuongBan[i] == Lst_SoLuong[j])
+                    {
+                        Kt = false;
+                        break;
+                    }
+                }
+                
+                if (Kt == true)
+                {
+                    Lst_SoLuong.Add(Lst_SoLuongBan[i]);
+                }
+
+                if (Lst_SoLuong.Count >= 1)
+                {
+                    break;
+                }
+            }
+
+            int soLuongMax = Lst_SoLuong[Lst_SoLuong.Count - 1];
+
+            // Trả về sách đầu tiên có số lượng bán >= soLuongMax
+            for (int i = 0; i < Lst_MaSach.Count; i++)
+            {
+                if (Lst_SoLuongBan[i] >= soLuongMax)
+                {
+                    for (int j = 0; j < DanhSachSach.Count; j++)
+                    {
+                        if (DanhSachSach[j].MaSach == Lst_MaSach[i])
+                        {
+                            return DanhSachSach[j];
+                        }
+                    }
                 }
             }
 
