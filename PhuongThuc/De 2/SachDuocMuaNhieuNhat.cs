@@ -17,7 +17,8 @@ namespace OOP_CSharp
                 return null;
             }
 
-            Dictionary<int, int> Dict_SoLuongBan = new Dictionary<int, int>();
+            List<int> Lst_MaSach = new List<int>();
+            List<int> Lst_SoLuongBan = new List<int>();
 
             for (int i = 0; i < DanhSachHDMS.Count; i++)
             {
@@ -26,32 +27,42 @@ namespace OOP_CSharp
                     int maSach = DanhSachHDMS[i].ChiTiet[j].MaSach;
                     int soLuong = DanhSachHDMS[i].ChiTiet[j].SoLuong;
 
-                    if (Dict_SoLuongBan.ContainsKey(maSach))
+                    int viTri = -1;
+                    for (int k = 0; k < Lst_MaSach.Count; k++)
                     {
-                        Dict_SoLuongBan[maSach] += soLuong;
+                        if (Lst_MaSach[k] == maSach)
+                        {
+                            viTri = k;
+                            break;
+                        }
+                    }
+
+                    if (viTri != -1)
+                    {
+                        Lst_SoLuongBan[viTri] += soLuong;
                     }
                     else
                     {
-                        Dict_SoLuongBan[maSach] = soLuong;
+                        Lst_MaSach.Add(maSach);
+                        Lst_SoLuongBan.Add(soLuong);
                     }
                 }
             }
 
-            if (Dict_SoLuongBan.Count == 0)
+            if (Lst_MaSach.Count == 0)
             {
                 return null;
             }
 
             int maSachMax = 0;
             int maxSoLuong = 0;
-            List<int> Keys = Dict_SoLuongBan.Keys.ToList();
 
-            for (int i = 0; i < Dict_SoLuongBan.Count; i++)
+            for (int i = 0; i < Lst_MaSach.Count; i++)
             {
-                if (i == 0 || Dict_SoLuongBan[Keys[i]] > maxSoLuong)
+                if (i == 0 || Lst_SoLuongBan[i] > maxSoLuong)
                 {
-                    maSachMax = Keys[i];
-                    maxSoLuong = Dict_SoLuongBan[Keys[i]];
+                    maSachMax = Lst_MaSach[i];
+                    maxSoLuong = Lst_SoLuongBan[i];
                 }
             }
 

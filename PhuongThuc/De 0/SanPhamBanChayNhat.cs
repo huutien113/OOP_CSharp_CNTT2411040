@@ -17,7 +17,8 @@ namespace OOP_CSharp
                 return null;
             }
 
-            Dictionary<int, int> Dict_SoLuongBan = new Dictionary<int, int>();
+            List<int> Lst_MaSP = new List<int>();
+            List<int> Lst_SoLuongBan = new List<int>();
 
             for (int i = 0; i < DanhSachHD.Count; i++)
             {
@@ -26,32 +27,42 @@ namespace OOP_CSharp
                     int maSP = DanhSachHD[i].ChiTiet[j].MaSP;
                     int soLuongBan = DanhSachHD[i].ChiTiet[j].SoLuongBan;
 
-                    if (Dict_SoLuongBan.ContainsKey(maSP))
+                    int viTri = -1;
+                    for (int k = 0; k < Lst_MaSP.Count; k++)
                     {
-                        Dict_SoLuongBan[maSP] += soLuongBan;
+                        if (Lst_MaSP[k] == maSP)
+                        {
+                            viTri = k;
+                            break;
+                        }
+                    }
+
+                    if (viTri != -1)
+                    {
+                        Lst_SoLuongBan[viTri] += soLuongBan;
                     }
                     else
                     {
-                        Dict_SoLuongBan[maSP] = soLuongBan;
+                        Lst_MaSP.Add(maSP);
+                        Lst_SoLuongBan.Add(soLuongBan);
                     }
                 }
             }
 
-            if (Dict_SoLuongBan.Count == 0)
+            if (Lst_MaSP.Count == 0)
             {
                 return null;
             }
 
             int maSPMax = 0;
             int maxSoLuong = 0;
-            List<int> Keys = Dict_SoLuongBan.Keys.ToList();
 
-            for (int i = 0; i < Dict_SoLuongBan.Count; i++)
+            for (int i = 0; i < Lst_MaSP.Count; i++)
             {
-                if (i == 0 || Dict_SoLuongBan[Keys[i]] > maxSoLuong)
+                if (i == 0 || Lst_SoLuongBan[i] > maxSoLuong)
                 {
-                    maSPMax = Keys[i];
-                    maxSoLuong = Dict_SoLuongBan[Keys[i]];
+                    maSPMax = Lst_MaSP[i];
+                    maxSoLuong = Lst_SoLuongBan[i];
                 }
             }
 
