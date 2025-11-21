@@ -236,5 +236,208 @@ namespace OOP_CSharp
             return Lst_SanPham;
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /*while (true)
+            {
+                bool KT_Huy = false;
+                Console.WriteLine("Nhập lựa chọn (1) Thêm đơn hàng, (2) Hủy");
+                string LuaChon = Console.ReadLine();
+
+                if (LuaChon == "1")
+                {
+                    Console.WriteLine("Nhập tên khách hàng: ");
+                    string HoTen = Console.ReadLine();
+                    Order DonHang = new Order(id: shop.NewOrderID(), customer: HoTen, discount: 0);
+                    for (int i = 0; i < shop.ThongTinKH(HoTen).Count; i++)
+                    {
+                        if (shop.ThongTinKH(HoTen).Count > 0)
+                        {                            
+                            break;
+                        }
+                        else if (shop.ThongTinKH(HoTen)[1] == HoTen)
+                        {
+                            DonHang = new Order(id: shop.ThongTinKH(HoTen)[0], customer: HoTen, discount: int.Parse(shop.ThongTinKH(HoTen)[2]));
+                            break;
+                        }
+                    }
+
+                    while (true)
+                    {
+                        Console.Write("Nhập mã sản phẩm (Enter để dừng): ");
+                        string ID = Console.ReadLine();
+
+                        if (string.IsNullOrWhiteSpace(ID.ToUpper()))
+                        {
+                            break;
+                        }
+
+                        Product SP = shop.FindProductById(ID.ToUpper());
+                        if (SP == null)
+                        {
+                            Console.WriteLine("Không tìm thấy sản phẩm, mời nhập lại.");
+                            continue;
+                        }
+
+                        Console.Write("Nhập số lượng: ");
+                        int SoLuong;
+                        if (!int.TryParse(Console.ReadLine(), out SoLuong) || SoLuong <= 0)
+                        {
+                            Console.WriteLine("Số lượng không hợp lệ.");
+                            continue;
+                        }
+                        if (!DonHang.AddItem(SP, SoLuong))
+                        {
+                            Console.WriteLine("Không đủ hàng cho sản phẩm này.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Đã thêm sản phẩm vào đơn.");
+                        }
+
+                        Console.WriteLine();
+                        Console.WriteLine("Chọn thao tác tiếp theo:");
+                        Console.WriteLine("(1) Thêm món khác, (2) Hoàn tất đơn này, (Nút bất kỳ) Hủy toàn bộ đơn");                        
+                        Console.Write("Lựa chọn: ");
+                        LuaChon = Console.ReadLine();
+
+                        if (LuaChon == "1")
+                        {
+                            continue;
+                        }
+                        else if (LuaChon == "2")
+                        {
+                            break;
+                        }
+                        else
+                        {
+                            KT_Huy = true;
+
+                            break;
+                        }
+                    }
+
+                    if (KT_Huy == true || DonHang.Items.Count == 0)
+                    {
+                        if (KT_Huy == true && DonHang.Items.Count > 0)
+                        {
+                            for (int i = 0; i < DonHang.Items.Count; i++)
+                            {
+                                Product SP = shop.FindProductById(DonHang.Items[i].Item.ProductId);
+                                if (SP != null)
+                                {
+                                    SP.IncreaseStock(DonHang.Items[i].Quantity);
+                                }
+                            }
+                            Console.WriteLine("Đơn hàng đã bị hủy");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Đơn hàng không có sản phẩm nào");
+                        }
+                    }
+                    else
+                    {
+                        if (shop.PlaceOrder(DonHang))
+                        {
+                            Console.WriteLine("Đặt hàng thành công");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Đặt hàng không thành công");
+                        }
+                    }
+                }
+
+                else if (LuaChon == "2")
+                    break;
+                
+            }
+            
+
+
+
+            for (int i = 0; i < shop.Orders.Count; i++)
+            {
+                Console.WriteLine(shop.Orders[i].GetOrderDetail());
+            }
+
+            //Console.Write("Từ (dd/MM/yyyy): ");
+            //DateTime from = DateTime.ParseExact(Console.ReadLine(), "dd/MM/yyyy", null);
+            //Console.Write("Đến (dd/MM/yyyy): ");
+            //DateTime to = DateTime.ParseExact(Console.ReadLine(), "dd/MM/yyyy", null);
+
+            //Console.WriteLine($"Tổng doanh thu từ ngày... tới ....: {shop.CalculateRevenue(from, to)}");
+
+            int Top = 3;
+            shop.GetBestSellingProducts(Top);
+            Console.WriteLine("Top những sản phẩm bán chạy:");
+            for (int i = 0; i < Top; i++)
+            {
+                if (shop.GetBestSellingProducts(Top).Count >= Top)
+                {
+                    Console.WriteLine($"Top {i + 1} {shop.GetBestSellingProducts(Top)[i].GetInfo()}");
+                }              
+            }
+
+            Console.WriteLine("Thống kê doanh thu theo loại SP:");
+            Dictionary<string, double> ThongKe = shop.RevenueByCategory();
+            for (int i = 0; i < ThongKe.Count; i++)
+            {
+                string key = ThongKe.ElementAt(i).Key;
+                double value = ThongKe.ElementAt(i).Value;
+
+                Console.WriteLine($"{key}: {value}");
+            }
+
+            Console.WriteLine("---------------------------");
+
+            List<Order> Lst_DonHang = shop.GetOrdersByCustomerName("Nguyễn Văn Cường");
+            Console.WriteLine("Đơn hàng khách hàng:");
+            for (int i = 0; i < Lst_DonHang.Count; i++)
+            {
+                Console.WriteLine($"{Lst_DonHang[i].GetOrderDetail()}");
+            }
+
+            Console.WriteLine("---------------------------");
+
+
+            int KtSL = 15;
+            Console.WriteLine($"Những sản phẩm còn tồn kho với số lượng < {KtSL}");
+            for (int i = 0; i < shop.CheckStock(KtSL).Count; i++)
+            {
+                Console.WriteLine(shop.CheckStock(KtSL)[i].GetInfo());
+            }
+        */
     }
 }
