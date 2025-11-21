@@ -10,11 +10,12 @@ namespace OOP_CSharp
 {
     partial class QuanLySach
     {
-        public Sach SachDuocMuaNhieuNhat()
+        public List<Sach> SachDuocMuaNhieuNhat(int topCount)
         {
-            if (DanhSachSach.Count == 0 || DanhSachHDMS.Count == 0)
+            List<Sach> Lst_Top = new List<Sach>();
+            if (DanhSachSach.Count == 0 || topCount <= 0)
             {
-                return null;
+                return Lst_Top;
             }
 
             // Tính tổng số lượng bán cho từng sách
@@ -52,7 +53,7 @@ namespace OOP_CSharp
 
             if (Lst_MaSach.Count == 0)
             {
-                return null;
+                return Lst_Top;
             }
 
             // Sắp xếp theo số lượng bán giảm dần (bubble sort)
@@ -75,7 +76,7 @@ namespace OOP_CSharp
                 }
             }
 
-            // Lấy số lượng bán cao nhất (tương tự Lst_Luong trong GetTopHighestPaid)
+            // Lấy top N số lượng bán cao nhất (tương tự Lst_Luong trong GetTopHighestPaid)
             List<int> Lst_SoLuong = new List<int>();
             for (int i = 0; i < Lst_MaSach.Count; i++)
             {
@@ -95,30 +96,31 @@ namespace OOP_CSharp
                     Lst_SoLuong.Add(Lst_SoLuongBan[i]);
                 }
 
-                if (Lst_SoLuong.Count >= 1)
+                if (Lst_SoLuong.Count >= topCount)
                 {
                     break;
                 }
             }
 
-            int soLuongMax = Lst_SoLuong[Lst_SoLuong.Count - 1];
+            int soLuongMin = Lst_SoLuong[Lst_SoLuong.Count - 1];
 
-            // Trả về sách đầu tiên có số lượng bán >= soLuongMax
+            // Trả về tất cả sách có số lượng bán >= soLuongMin
             for (int i = 0; i < Lst_MaSach.Count; i++)
             {
-                if (Lst_SoLuongBan[i] >= soLuongMax)
+                if (Lst_SoLuongBan[i] >= soLuongMin)
                 {
                     for (int j = 0; j < DanhSachSach.Count; j++)
                     {
                         if (DanhSachSach[j].MaSach == Lst_MaSach[i])
                         {
-                            return DanhSachSach[j];
+                            Lst_Top.Add(DanhSachSach[j]);
+                            break;
                         }
                     }
                 }
             }
 
-            return null;
+            return Lst_Top;
         }
     }
 }
