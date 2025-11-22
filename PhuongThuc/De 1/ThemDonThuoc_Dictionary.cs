@@ -14,13 +14,13 @@ namespace OOP_CSharp
             Dictionary<string, BenhNhan> Dict_BN = new Dictionary<string, BenhNhan>();
             for (int i = 0; i < DanhSachBN.Count; i++)
             {
-                if (!Dict_BN.ContainsKey(DanhSachBN[i].MaBN))
+                if (Dict_BN.ContainsKey(DanhSachBN[i].MaBN) == false)
                 {
                     Dict_BN[DanhSachBN[i].MaBN] = DanhSachBN[i];
                 }
             }
 
-            if (!Dict_BN.ContainsKey(dt.MaBN))
+            if (Dict_BN.ContainsKey(dt.MaBN) == false)
             {
                 return false;
             }
@@ -28,7 +28,7 @@ namespace OOP_CSharp
             Dictionary<int, Thuoc> Dict_Thuoc = new Dictionary<int, Thuoc>();
             for (int i = 0; i < DanhSachThuoc.Count; i++)
             {
-                if (!Dict_Thuoc.ContainsKey(DanhSachThuoc[i].MaThuoc))
+                if (Dict_Thuoc.ContainsKey(DanhSachThuoc[i].MaThuoc) == false)
                 {
                     Dict_Thuoc[DanhSachThuoc[i].MaThuoc] = DanhSachThuoc[i];
                 }
@@ -41,7 +41,7 @@ namespace OOP_CSharp
                     return false;
                 }
 
-                if (!Dict_Thuoc.ContainsKey(dt.ChiTiet[i].MaThuoc))
+                if (Dict_Thuoc.ContainsKey(dt.ChiTiet[i].MaThuoc) == false)
                 {
                     return false;
                 }

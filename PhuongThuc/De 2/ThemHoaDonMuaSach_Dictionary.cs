@@ -14,13 +14,13 @@ namespace OOP_CSharp
             Dictionary<string, DocGia> Dict_DG = new Dictionary<string, DocGia>();
             for (int i = 0; i < DanhSachDG.Count; i++)
             {
-                if (!Dict_DG.ContainsKey(DanhSachDG[i].MaDG))
+                if (Dict_DG.ContainsKey(DanhSachDG[i].MaDG) == false)
                 {
                     Dict_DG[DanhSachDG[i].MaDG] = DanhSachDG[i];
                 }
             }
 
-            if (!Dict_DG.ContainsKey(hdms.MaDG))
+            if (Dict_DG.ContainsKey(hdms.MaDG) == false)
             {
                 return false;
             }
@@ -28,7 +28,7 @@ namespace OOP_CSharp
             Dictionary<int, Sach> Dict_Sach = new Dictionary<int, Sach>();
             for (int i = 0; i < DanhSachSach.Count; i++)
             {
-                if (!Dict_Sach.ContainsKey(DanhSachSach[i].MaSach))
+                if (Dict_Sach.ContainsKey(DanhSachSach[i].MaSach) == false)
                 {
                     Dict_Sach[DanhSachSach[i].MaSach] = DanhSachSach[i];
                 }
@@ -41,7 +41,7 @@ namespace OOP_CSharp
                     return false;
                 }
 
-                if (!Dict_Sach.ContainsKey(hdms.ChiTiet[i].MaSach))
+                if (Dict_Sach.ContainsKey(hdms.ChiTiet[i].MaSach) == false)
                 {
                     return false;
                 }

@@ -45,25 +45,22 @@ namespace OOP_CSharp
                     }
                 }
 
-                if (KH != null)
+                double ChietKhau = 0;
+                if (ChietKhauTheoLoai.ContainsKey(KH.LoaiKH))
                 {
-                    double ChietKhau = 0;
-                    if (ChietKhauTheoLoai.ContainsKey(KH.LoaiKH))
-                    {
-                        ChietKhau = ChietKhauTheoLoai[KH.LoaiKH];
-                    }
+                    ChietKhau = ChietKhauTheoLoai[KH.LoaiKH];
+                }
 
-                    Tong = Tong * (1- ChietKhau);
+                Tong = Tong * (1- ChietKhau);
 
-                    if (Dict_Tong.ContainsKey(Lst_HD[i].MaKH))
-                    {
-                        Dict_Tong[Lst_HD[i].MaKH] += Tong;
-                    }
+                if (Dict_Tong.ContainsKey(Lst_HD[i].MaKH))
+                {
+                    Dict_Tong[Lst_HD[i].MaKH] += Tong;
+                }
 
-                    else
-                    {
-                        Dict_Tong[Lst_HD[i].MaKH] = Tong;
-                    }
+                else
+                {
+                    Dict_Tong[Lst_HD[i].MaKH] = Tong;
                 }
             }
 

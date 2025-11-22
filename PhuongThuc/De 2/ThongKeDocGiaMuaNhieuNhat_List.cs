@@ -43,10 +43,6 @@ namespace OOP_CSharp
                     }
                 }
                 
-                if (DG == null)
-                {
-                    continue;
-                }
 
                 double ChietKhau = 0;
                 if (ChietKhauTheoLoai.ContainsKey(DG.LoaiDG))
