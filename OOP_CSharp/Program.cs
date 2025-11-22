@@ -152,7 +152,7 @@ namespace OOP_CSharp
 
 
 
-            var ql = new QuanLyCuaHang();
+            var ql = new QLCH();
 
             // Thêm sản phẩm
             ql.CapNhatSoLuongTon(1, 10); // Không tồn tại → bỏ qua

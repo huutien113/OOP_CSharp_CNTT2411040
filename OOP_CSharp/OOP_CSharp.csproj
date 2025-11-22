@@ -59,13 +59,12 @@
     <Compile Include="PhuongTien.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="QuanLyCuaHang.cs" />
+    <Compile Include="QLCH.cs" />
     <Compile Include="QuanLyCongTy.cs" />
     <Compile Include="ZeroException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="ĐỀ KIỂM TRA THỰC HÀNH OOP.pdf" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
