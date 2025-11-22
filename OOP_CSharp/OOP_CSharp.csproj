@@ -45,7 +45,7 @@
   <ItemGroup>
     <Compile Include="CB.cs" />
     <Compile Include="CBVC.cs" />
-    <Compile Include="classesLibHTTT.cs" />
+    <Compile Include="YeuCau.cs" />
     <Compile Include="classLib.cs" />
     <Compile Include="classLib2.cs" />
     <Compile Include="Company.cs" />
