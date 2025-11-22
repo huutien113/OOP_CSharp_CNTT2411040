@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ConsoleApplication3;
@@ -8,54 +7,53 @@ using KTGK_CSharp;
 
 namespace OOP_CSharp
 {
-    partial class QuanLyNhaThuoc
+    partial class QuanLyCuaHang
     {
-        public List<Thuoc> ThuocBanChayNhat(int topCount)
+        public List<SanPham> SanPhamBanChayNhat_Dictionary(int topCount)
         {
-            List<Thuoc> Lst_Top = new List<Thuoc>();
-            if (DanhSachThuoc.Count == 0 || topCount <= 0)
+            List<SanPham> Lst_Top = new List<SanPham>();
+            if (DanhSachSP.Count == 0 || topCount <= 0)
             {
                 return null;
             }
 
-            List<int> Lst_MaThuoc = new List<int>();
-            List<int> Lst_SoLuongBan = new List<int>();
+            Dictionary<int, int> Dict_SoLuongBan = new Dictionary<int, int>();
 
-            for (int i = 0; i < DanhSachDT.Count; i++)
+            for (int i = 0; i < DanhSachHD.Count; i++)
             {
-                for (int j = 0; j < DanhSachDT[i].ChiTiet.Count; j++)
+                for (int j = 0; j < DanhSachHD[i].ChiTiet.Count; j++)
                 {
-                    int MaThuoc = DanhSachDT[i].ChiTiet[j].MaThuoc;
-                    int SoLuongBan = DanhSachDT[i].ChiTiet[j].SoLuong;
-                    
-                    int ViTri = -1;
-                    for (int k = 0; k < Lst_MaThuoc.Count; k++)
-                    {
-                        if (Lst_MaThuoc[k] == MaThuoc)
-                        {
-                            ViTri = k;
-                            break;
-                        }
-                    }
+                    int MaSP = DanhSachHD[i].ChiTiet[j].MaSP;
+                    int SoLuongBan = DanhSachHD[i].ChiTiet[j].SoLuongBan;
 
-                    if (ViTri == -1)
+                    if (Dict_SoLuongBan.ContainsKey(MaSP))
                     {
-                        Lst_MaThuoc.Add(MaThuoc);
-                        Lst_SoLuongBan.Add(SoLuongBan);
+                        Dict_SoLuongBan[MaSP] += SoLuongBan;
                     }
                     else
                     {
-                        Lst_SoLuongBan[ViTri] += SoLuongBan;
+                        Dict_SoLuongBan[MaSP] = SoLuongBan;
                     }
                 }
             }
-            if (Lst_MaThuoc.Count == 0)
+
+            if (Dict_SoLuongBan.Count == 0)
             {
                 return null;
             }
-            for (int i = 0; i < Lst_MaThuoc.Count - 1; i++)
+
+            List<int> Lst_MaSP = new List<int>();
+            List<int> Lst_SoLuongBan = new List<int>();
+
+            foreach (int MaSP in Dict_SoLuongBan.Keys)
             {
-                for (int j = 0; j < Lst_MaThuoc.Count - i - 1; j++)
+                Lst_MaSP.Add(MaSP);
+                Lst_SoLuongBan.Add(Dict_SoLuongBan[MaSP]);
+            }
+
+            for (int i = 0; i < Lst_MaSP.Count - 1; i++)
+            {
+                for (int j = 0; j < Lst_MaSP.Count - i - 1; j++)
                 {
                     if (Lst_SoLuongBan[j] < Lst_SoLuongBan[j+1])
                     { 
@@ -63,9 +61,9 @@ namespace OOP_CSharp
                         Lst_SoLuongBan[j] = Lst_SoLuongBan[j+1];
                         Lst_SoLuongBan[j+1] = TSLB;
 
-                        int TMaThuoc = Lst_MaThuoc[j];
-                        Lst_MaThuoc[j] = Lst_MaThuoc[j+1];
-                        Lst_MaThuoc[j+1] = TMaThuoc;
+                        int TMSP = Lst_MaSP[j];
+                        Lst_MaSP[j] = Lst_MaSP[j+1];
+                        Lst_MaSP[j+1] = TMSP;
                     }
                 }
             }
@@ -100,11 +98,11 @@ namespace OOP_CSharp
             {
                 if (Lst_SoLuongBan[i] >= soLuongMin)
                 {
-                    for (int j = 0; j < DanhSachThuoc.Count; j++)
+                    for (int j = 0; j < DanhSachSP.Count; j++)
                     {
-                        if (DanhSachThuoc[j].MaThuoc == Lst_MaThuoc[i])
+                        if (DanhSachSP[j].MaSP == Lst_MaSP[i])
                         {
-                            Lst_Top.Add(DanhSachThuoc[j]);
+                            Lst_Top.Add(DanhSachSP[j]);
                             break;
                         }
                     }

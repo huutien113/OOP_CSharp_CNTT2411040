@@ -15,10 +15,9 @@ namespace OOP_CSharp
             List<SanPham> Lst_Top = new List<SanPham>();
             if (DanhSachSP.Count == 0 || topCount <= 0)
             {
-                return Lst_Top;
+                return null;
             }
 
-            // Tính tổng số lượng bán cho từng sản phẩm
             List<int> Lst_MaSP = new List<int>();
             List<int> Lst_SoLuongBan = new List<int>();
 
@@ -26,37 +25,34 @@ namespace OOP_CSharp
             {
                 for (int j = 0; j < DanhSachHD[i].ChiTiet.Count; j++)
                 {
-                    int maSP = DanhSachHD[i].ChiTiet[j].MaSP;
-                    int soLuongBan = DanhSachHD[i].ChiTiet[j].SoLuongBan;
-
-                    int viTri = -1;
+                    int MaSP = DanhSachHD[i].ChiTiet[j].MaSP;
+                    int SoLuongBan = DanhSachHD[i].ChiTiet[j].SoLuongBan;
+                    
+                    int ViTri = -1;
                     for (int k = 0; k < Lst_MaSP.Count; k++)
                     {
-                        if (Lst_MaSP[k] == maSP)
+                        if (Lst_MaSP[k] == MaSP)
                         {
-                            viTri = k;
+                            ViTri = k;
                             break;
                         }
                     }
 
-                    if (viTri != -1)
+                    if (ViTri == -1)
                     {
-                        Lst_SoLuongBan[viTri] += soLuongBan;
+                        Lst_MaSP.Add(MaSP);
+                        Lst_SoLuongBan.Add(SoLuongBan);
                     }
                     else
                     {
-                        Lst_MaSP.Add(maSP);
-                        Lst_SoLuongBan.Add(soLuongBan);
+                        Lst_SoLuongBan[ViTri] += SoLuongBan;
                     }
                 }
             }
-
             if (Lst_MaSP.Count == 0)
             {
-                return Lst_Top;
+                return null;
             }
-
-            // Sắp xếp theo số lượng bán giảm dần (bubble sort)
             for (int i = 0; i < Lst_MaSP.Count - 1; i++)
             {
                 for (int j = 0; j < Lst_MaSP.Count - i - 1; j++)
@@ -66,7 +62,7 @@ namespace OOP_CSharp
                         int TSLB = Lst_SoLuongBan[j];
                         Lst_SoLuongBan[j] = Lst_SoLuongBan[j+1];
                         Lst_SoLuongBan[j+1] = TSLB;
-            
+
                         int TMSP = Lst_MaSP[j];
                         Lst_MaSP[j] = Lst_MaSP[j+1];
                         Lst_MaSP[j+1] = TMSP;
@@ -74,36 +70,33 @@ namespace OOP_CSharp
                 }
             }
 
-            // Lấy top N số lượng bán cao nhất (tương tự Lst_Luong trong GetTopHighestPaid)
-            List<int> Lst_SoLuong = new List<int>();
-            for (int i = 0; i < Lst_MaSP.Count; i++)
+            List<int> Lst_SoLuongTop = new List<int>();
+            for (int i = 0; i < Lst_SoLuongBan.Count; i++)
             {
                 bool Kt = true;
-                
-                for (int j = 0; j < Lst_SoLuong.Count; j++)
+
+                for (int j = 0; j < Lst_SoLuongTop.Count; j++)
                 {
-                    if (Lst_SoLuongBan[i] == Lst_SoLuong[j])
+                    if (Lst_SoLuongBan[i] == Lst_SoLuongTop[j])
                     {
                         Kt = false;
                         break;
                     }
                 }
-                
+
                 if (Kt == true)
                 {
-                    Lst_SoLuong.Add(Lst_SoLuongBan[i]);
+                    Lst_SoLuongTop.Add(Lst_SoLuongBan[i]);
                 }
 
-                if (Lst_SoLuong.Count >= topCount)
+                if (Lst_SoLuongTop.Count >= topCount)
                 {
                     break;
                 }
             }
 
-            int soLuongMin = Lst_SoLuong[Lst_SoLuong.Count - 1];
-
-            // Trả về tất cả sản phẩm có số lượng bán >= soLuongMin
-            for (int i = 0; i < Lst_MaSP.Count; i++)
+            int soLuongMin = Lst_SoLuongTop[Lst_SoLuongTop.Count - 1];
+            for (int i = 0; i < Lst_SoLuongBan.Count; i++)
             {
                 if (Lst_SoLuongBan[i] >= soLuongMin)
                 {

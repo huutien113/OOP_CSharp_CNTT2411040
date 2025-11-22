@@ -15,10 +15,9 @@ namespace OOP_CSharp
             List<Sach> Lst_Top = new List<Sach>();
             if (DanhSachSach.Count == 0 || topCount <= 0)
             {
-                return Lst_Top;
+                return null;
             }
 
-            // Tính tổng số lượng bán cho từng sách
             List<int> Lst_MaSach = new List<int>();
             List<int> Lst_SoLuongBan = new List<int>();
 
@@ -26,37 +25,34 @@ namespace OOP_CSharp
             {
                 for (int j = 0; j < DanhSachHDMS[i].ChiTiet.Count; j++)
                 {
-                    int maSach = DanhSachHDMS[i].ChiTiet[j].MaSach;
-                    int soLuong = DanhSachHDMS[i].ChiTiet[j].SoLuong;
-
-                    int viTri = -1;
+                    int MaSach = DanhSachHDMS[i].ChiTiet[j].MaSach;
+                    int SoLuongBan = DanhSachHDMS[i].ChiTiet[j].SoLuong;
+                    
+                    int ViTri = -1;
                     for (int k = 0; k < Lst_MaSach.Count; k++)
                     {
-                        if (Lst_MaSach[k] == maSach)
+                        if (Lst_MaSach[k] == MaSach)
                         {
-                            viTri = k;
+                            ViTri = k;
                             break;
                         }
                     }
 
-                    if (viTri != -1)
+                    if (ViTri == -1)
                     {
-                        Lst_SoLuongBan[viTri] += soLuong;
+                        Lst_MaSach.Add(MaSach);
+                        Lst_SoLuongBan.Add(SoLuongBan);
                     }
                     else
                     {
-                        Lst_MaSach.Add(maSach);
-                        Lst_SoLuongBan.Add(soLuong);
+                        Lst_SoLuongBan[ViTri] += SoLuongBan;
                     }
                 }
             }
-
             if (Lst_MaSach.Count == 0)
             {
-                return Lst_Top;
+                return null;
             }
-
-            // Sắp xếp theo số lượng bán giảm dần (bubble sort)
             for (int i = 0; i < Lst_MaSach.Count - 1; i++)
             {
                 for (int j = 0; j < Lst_MaSach.Count - i - 1; j++)
@@ -66,44 +62,41 @@ namespace OOP_CSharp
                         int TSLB = Lst_SoLuongBan[j];
                         Lst_SoLuongBan[j] = Lst_SoLuongBan[j+1];
                         Lst_SoLuongBan[j+1] = TSLB;
-            
-                        int TMAS = Lst_MaSach[j];
+
+                        int TMaSach = Lst_MaSach[j];
                         Lst_MaSach[j] = Lst_MaSach[j+1];
-                        Lst_MaSach[j+1] = TMAS;
+                        Lst_MaSach[j+1] = TMaSach;
                     }
                 }
             }
 
-            // Lấy top N số lượng bán cao nhất (tương tự Lst_Luong trong GetTopHighestPaid)
-            List<int> Lst_SoLuong = new List<int>();
-            for (int i = 0; i < Lst_MaSach.Count; i++)
+            List<int> Lst_SoLuongTop = new List<int>();
+            for (int i = 0; i < Lst_SoLuongBan.Count; i++)
             {
                 bool Kt = true;
-                
-                for (int j = 0; j < Lst_SoLuong.Count; j++)
+
+                for (int j = 0; j < Lst_SoLuongTop.Count; j++)
                 {
-                    if (Lst_SoLuongBan[i] == Lst_SoLuong[j])
+                    if (Lst_SoLuongBan[i] == Lst_SoLuongTop[j])
                     {
                         Kt = false;
                         break;
                     }
                 }
-                
+
                 if (Kt == true)
                 {
-                    Lst_SoLuong.Add(Lst_SoLuongBan[i]);
+                    Lst_SoLuongTop.Add(Lst_SoLuongBan[i]);
                 }
 
-                if (Lst_SoLuong.Count >= topCount)
+                if (Lst_SoLuongTop.Count >= topCount)
                 {
                     break;
                 }
             }
 
-            int soLuongMin = Lst_SoLuong[Lst_SoLuong.Count - 1];
-
-            // Trả về tất cả sách có số lượng bán >= soLuongMin
-            for (int i = 0; i < Lst_MaSach.Count; i++)
+            int soLuongMin = Lst_SoLuongTop[Lst_SoLuongTop.Count - 1];
+            for (int i = 0; i < Lst_SoLuongBan.Count; i++)
             {
                 if (Lst_SoLuongBan[i] >= soLuongMin)
                 {
