@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ConsoleApplication3;
@@ -44,6 +43,10 @@ namespace OOP_CSharp
                     }
                 }
                 
+                if (BN == null)
+                {
+                    continue;
+                }
 
                 double ChietKhau = 0;
                 if (ChietKhauTheoLoai.ContainsKey(BN.LoaiBN))
