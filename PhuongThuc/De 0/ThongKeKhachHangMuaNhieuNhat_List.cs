@@ -53,11 +53,11 @@ namespace OOP_CSharp
                 Tong = Tong * (1 - ChietKhau);
 
                 int ViTri = -1;
-                for (int k = 0; k < Lst_MaKH.Count; k++)
+                for (int j = 0; j < Lst_MaKH.Count; j++)
                 {
-                    if (Lst_MaKH[k] == KH.MaKH)
+                    if (Lst_MaKH[j] == KH.MaKH)
                     {
-                        ViTri = k;
+                        ViTri = j;
                         break;
                     }
                 }
