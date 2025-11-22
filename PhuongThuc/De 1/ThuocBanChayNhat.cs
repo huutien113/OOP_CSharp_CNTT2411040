@@ -59,19 +59,17 @@ namespace OOP_CSharp
             // Sắp xếp theo số lượng bán giảm dần (bubble sort)
             for (int i = 0; i < Lst_MaThuoc.Count - 1; i++)
             {
-                for (int j = i + 1; j < Lst_MaThuoc.Count; j++)
+                for (int j = 0; j < Lst_MaThuoc.Count - i - 1; j++)
                 {
-                    if (Lst_SoLuongBan[i] < Lst_SoLuongBan[j])
-                    {
-                        // Swap số lượng bán
-                        int tempSL = Lst_SoLuongBan[i];
-                        Lst_SoLuongBan[i] = Lst_SoLuongBan[j];
-                        Lst_SoLuongBan[j] = tempSL;
-
-                        // Swap mã thuốc
-                        int tempMa = Lst_MaThuoc[i];
-                        Lst_MaThuoc[i] = Lst_MaThuoc[j];
-                        Lst_MaThuoc[j] = tempMa;
+                    if (Lst_SoLuongBan[j] < Lst_SoLuongBan[j+1])
+                    { 
+                        int TSLB = Lst_SoLuongBan[j];
+                        Lst_SoLuongBan[j] = Lst_SoLuongBan[j+1];
+                        Lst_SoLuongBan[j+1] = TSLB;
+            
+                        int TMAT = Lst_MaThuoc[j];
+                        Lst_MaThuoc[j] = Lst_MaThuoc[j+1];
+                        Lst_MaThuoc[j+1] = TMAT;
                     }
                 }
             }
