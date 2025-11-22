@@ -59,19 +59,17 @@ namespace OOP_CSharp
             // Sắp xếp theo số lượng bán giảm dần (bubble sort)
             for (int i = 0; i < Lst_MaSP.Count - 1; i++)
             {
-                for (int j = i + 1; j < Lst_MaSP.Count; j++)
+                for (int j = 0; j < Lst_MaSP.Count - i - 1; j++)
                 {
-                    if (Lst_SoLuongBan[i] < Lst_SoLuongBan[j])
-                    {
-                        // Swap số lượng bán
-                        int tempSL = Lst_SoLuongBan[i];
-                        Lst_SoLuongBan[i] = Lst_SoLuongBan[j];
-                        Lst_SoLuongBan[j] = tempSL;
-
-                        // Swap mã sản phẩm
-                        int tempMa = Lst_MaSP[i];
-                        Lst_MaSP[i] = Lst_MaSP[j];
-                        Lst_MaSP[j] = tempMa;
+                    if (Lst_SoLuongBan[j] < Lst_SoLuongBan[j+1])
+                    { 
+                        int TSLB = Lst_SoLuongBan[j];
+                        Lst_SoLuongBan[j] = Lst_SoLuongBan[j+1];
+                        Lst_SoLuongBan[j+1] = TSLB;
+            
+                        int TMSP = Lst_MaSP[j];
+                        Lst_MaSP[j] = Lst_MaSP[j+1];
+                        Lst_MaSP[j+1] = TMSP;
                     }
                 }
             }
