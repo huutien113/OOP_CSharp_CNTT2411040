@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ConsoleApplication3;
@@ -10,7 +9,7 @@ namespace OOP_CSharp
 {
     partial class QuanLySach
     {
-        public DocGia ThongKeDocGiaMuaNhieuNhat(int thang, int nam)
+        public DocGia ThongKeDocGiaMuaNhieuNhat_List(int thang, int nam)
         {
             List<HoaDonMuaSach> Lst_HDMS = new List<HoaDonMuaSach>();
             for (int i = 0; i < DanhSachHDMS.Count; i++)
@@ -20,13 +19,12 @@ namespace OOP_CSharp
                     Lst_HDMS.Add(DanhSachHDMS[i]);
                 }
             }
-            if (Lst_HDMS.Count <= 0)
-            {
+            if (Lst_HDMS.Count == 0)
                 return null;
-            }
 
-            Dictionary<string, double> Dict_Tong = new Dictionary<string, double>();
-            
+            List<string> Lst_MaDG = new List<string>();
+            List<double> Lst_TongTien = new List<double>();
+
             for (int i = 0; i < Lst_HDMS.Count; i++)
             {
                 double Tong = 0;
@@ -44,6 +42,7 @@ namespace OOP_CSharp
                         break;
                     }
                 }
+                
 
                 double ChietKhau = 0;
                 if (ChietKhauTheoLoai.ContainsKey(DG.LoaiDG))
@@ -51,43 +50,50 @@ namespace OOP_CSharp
                     ChietKhau = ChietKhauTheoLoai[DG.LoaiDG];
                 }
 
-                Tong = Tong * (1- ChietKhau);
+                Tong = Tong * (1 - ChietKhau);
 
-                if (Dict_Tong.ContainsKey(Lst_HDMS[i].MaDG))
+                int ViTri = -1;
+                for (int k = 0; k < Lst_MaDG.Count; k++)
                 {
-                    Dict_Tong[Lst_HDMS[i].MaDG] += Tong;
+                    if (Lst_MaDG[k] == DG.MaDG)
+                    {
+                        ViTri = k;
+                        break;
+                    }
                 }
 
+                if (ViTri == -1)
+                {
+                    Lst_MaDG.Add(DG.MaDG);
+                    Lst_TongTien.Add(Tong);
+                }
                 else
                 {
-                    Dict_Tong[Lst_HDMS[i].MaDG] = Tong;
+                    Lst_TongTien[ViTri] += Tong;
                 }
             }
 
-
-            string MaDGMAX = null;
-            double MaxTong = 0;
-            List<string> Key = new List<string>();
-            foreach (string k in Dict_Tong.Keys)
+            if (Lst_MaDG.Count == 0)
             {
-                Key.Add(k);
+                return null;
             }
-            for (int i = 0; i < Dict_Tong.Count; i++)
+            int ViTriMax = 0;
+            for (int i = 1; i < Lst_TongTien.Count; i++)
             {
-                if (MaDGMAX == null || Dict_Tong[Key[i]] > MaxTong)
+                if (Lst_TongTien[i] > Lst_TongTien[ViTriMax])
                 {
-                    MaDGMAX = Key[i];
-                    MaxTong = Dict_Tong[Key[i]];
+                    ViTriMax = i;
                 }
             }
 
             for (int i = 0; i < DanhSachDG.Count; i++)
             {
-                if (MaDGMAX == DanhSachDG[i].MaDG)
+                if (DanhSachDG[i].MaDG == Lst_MaDG[ViTriMax])
                 {
                     return DanhSachDG[i];
                 }
             }
+
             return null;
         }
     }

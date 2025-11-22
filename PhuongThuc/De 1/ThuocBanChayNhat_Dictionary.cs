@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ConsoleApplication3;
@@ -10,7 +9,7 @@ namespace OOP_CSharp
 {
     partial class QuanLyNhaThuoc
     {
-        public List<Thuoc> ThuocBanChayNhat(int topCount)
+        public List<Thuoc> ThuocBanChayNhat_Dictionary(int topCount)
         {
             List<Thuoc> Lst_Top = new List<Thuoc>();
             if (DanhSachThuoc.Count == 0 || topCount <= 0)
@@ -18,8 +17,7 @@ namespace OOP_CSharp
                 return null;
             }
 
-            List<int> Lst_MaThuoc = new List<int>();
-            List<int> Lst_SoLuongBan = new List<int>();
+            Dictionary<int, int> Dict_SoLuongBan = new Dictionary<int, int>();
 
             for (int i = 0; i < DanhSachDT.Count; i++)
             {
@@ -27,32 +25,32 @@ namespace OOP_CSharp
                 {
                     int MaThuoc = DanhSachDT[i].ChiTiet[j].MaThuoc;
                     int SoLuongBan = DanhSachDT[i].ChiTiet[j].SoLuong;
-                    
-                    int ViTri = -1;
-                    for (int k = 0; k < Lst_MaThuoc.Count; k++)
-                    {
-                        if (Lst_MaThuoc[k] == MaThuoc)
-                        {
-                            ViTri = k;
-                            break;
-                        }
-                    }
 
-                    if (ViTri == -1)
+                    if (Dict_SoLuongBan.ContainsKey(MaThuoc))
                     {
-                        Lst_MaThuoc.Add(MaThuoc);
-                        Lst_SoLuongBan.Add(SoLuongBan);
+                        Dict_SoLuongBan[MaThuoc] += SoLuongBan;
                     }
                     else
                     {
-                        Lst_SoLuongBan[ViTri] += SoLuongBan;
+                        Dict_SoLuongBan[MaThuoc] = SoLuongBan;
                     }
                 }
             }
-            if (Lst_MaThuoc.Count == 0)
+
+            if (Dict_SoLuongBan.Count == 0)
             {
                 return null;
             }
+
+            List<int> Lst_MaThuoc = new List<int>();
+            List<int> Lst_SoLuongBan = new List<int>();
+
+            foreach (int MaThuoc in Dict_SoLuongBan.Keys)
+            {
+                Lst_MaThuoc.Add(MaThuoc);
+                Lst_SoLuongBan.Add(Dict_SoLuongBan[MaThuoc]);
+            }
+
             for (int i = 0; i < Lst_MaThuoc.Count - 1; i++)
             {
                 for (int j = 0; j < Lst_MaThuoc.Count - i - 1; j++)
