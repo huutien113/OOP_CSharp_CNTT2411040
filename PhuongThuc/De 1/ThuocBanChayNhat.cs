@@ -67,9 +67,9 @@ namespace OOP_CSharp
                         Lst_SoLuongBan[j] = Lst_SoLuongBan[j+1];
                         Lst_SoLuongBan[j+1] = TSLB;
             
-                        int TMSP = Lst_MaThuoc[j];
+                        int TMAT = Lst_MaThuoc[j];
                         Lst_MaThuoc[j] = Lst_MaThuoc[j+1];
-                        Lst_MaThuoc[j+1] = TMSP;
+                        Lst_MaThuoc[j+1] = TMAT;
                     }
                 }
             }
