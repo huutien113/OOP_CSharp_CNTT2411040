@@ -8,7 +8,7 @@ using KTGK_CSharp;
 
 namespace OOP_CSharp
 {
-    class QLCH
+    class QuanLyNhanVien
     {
         private List<SanPham> danhSachSP;
         private List<KhachHang> danhSachKH;
@@ -38,7 +38,7 @@ namespace OOP_CSharp
         }
         // Loại Khách hàng -> % chiết khấu(0 đến 10%) 
 
-        public QLCH()
+        public QuanLyNhanVien()
         {
             DanhSachSP = new List<SanPham>();
             DanhSachKH = new List<KhachHang>();

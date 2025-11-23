@@ -114,26 +114,26 @@ namespace OOP_CSharp
 
 
 
-            OnlineShop shop = new OnlineShop();
+            //OnlineShop shop = new OnlineShop();
 
-            Laptop a = new Laptop("LP001", "Dell XPS 15", 35000000, 15, "i7-12700H", 16, "RTX 3050");
-            shop.AddProduct(a);
-            a = new Laptop("LP002", "MacBook Pro 14", 55000000, 13, "M2 Pro", 16, "Integrated");
-            shop.AddProduct(a);
-            a = new Laptop("LP003", "Asus ROG", 42000000, 11, "Ryzen 9", 32, "RTX 3070");
-            shop.AddProduct(a);
-            a = new Laptop("LP004", "HP Spectre", 30000000, 12, "i5-1235U", 8, "Iris Xe");
-            shop.AddProduct(a);
+            //Laptop a = new Laptop("LP001", "Dell XPS 15", 35000000, 15, "i7-12700H", 16, "RTX 3050");
+            //shop.AddProduct(a);
+            //a = new Laptop("LP002", "MacBook Pro 14", 55000000, 13, "M2 Pro", 16, "Integrated");
+            //shop.AddProduct(a);
+            //a = new Laptop("LP003", "Asus ROG", 42000000, 11, "Ryzen 9", 32, "RTX 3070");
+            //shop.AddProduct(a);
+            //a = new Laptop("LP004", "HP Spectre", 30000000, 12, "i5-1235U", 8, "Iris Xe");
+            //shop.AddProduct(a);
 
 
-            Smartphone b = new Smartphone("SP001", "iPhone 15", 25000000, 16, "6.1", 48);
-            shop.AddProduct(b);
-            b = new Smartphone("SP002", "Samsung S24", 22000000, 14, "6.2", 50);
-            shop.AddProduct(b);
-            b = new Smartphone("SP003", "Xiaomi 14", 15000000, 15, "6.36", 50);
-            shop.AddProduct(b);
-            b = new Smartphone("SP004", "Oppo Reno", 12000000, 17, "6.4", 64);
-            shop.AddProduct(b);
+            //Smartphone b = new Smartphone("SP001", "iPhone 15", 25000000, 16, "6.1", 48);
+            //shop.AddProduct(b);
+            //b = new Smartphone("SP002", "Samsung S24", 22000000, 14, "6.2", 50);
+            //shop.AddProduct(b);
+            //b = new Smartphone("SP003", "Xiaomi 14", 15000000, 15, "6.36", 50);
+            //shop.AddProduct(b);
+            //b = new Smartphone("SP004", "Oppo Reno", 12000000, 17, "6.4", 64);
+            //shop.AddProduct(b);
 
 
 
@@ -149,52 +149,6 @@ namespace OOP_CSharp
             //{
             //    Console.WriteLine("Đặt hàng không thành công");
             //}
-
-
-
-            var ql = new QLCH();
-
-            // Thêm sản phẩm
-            ql.CapNhatSoLuongTon(1, 10); // Không tồn tại → bỏ qua
-            var sp1 = new SanPham(1, "Bàn phím cơ RK", 850000, 10, "Royal Kludge");
-            var sp2 = new SanPham(2, "Chuột G Pro", 1200000, 8, "Logitech");
-            var sp3 = new SanPham(3, "Tai nghe WH-1000", 6500000, 3, "Sony");
-            ql.ThemSanPham(sp1);
-            ql.ThemSanPham(sp2);
-            ql.ThemSanPham(sp3);
-
-            // Thêm khách
-            var kh1 = new KhachHang("KH001", "Nguyễn Văn Út Mới", "Hà Nội", "VIP");
-            var kh2 = new KhachHang("KH002", "Trần Thị Thanh", "Đà Nẵng", "Thuong");
-            var kh3 = new KhachHang("KH003", "Lê Văn Tường", "TP.HCM", "Moi");
-            ql.ThemKhachHang(kh1);
-            ql.ThemKhachHang(kh2);
-            ql.ThemKhachHang(kh3);
-
-            // Tạo hóa đơn
-            var hd1 = new HoaDon(1001, "KH001", new DateTime(2025, 11, 10));
-            hd1.ChiTiet.Add(new ChiTietHoaDon(1, 2, 950000));   // OK
-            hd1.ChiTiet.Add(new ChiTietHoaDon(2, 1, 1350000));  // OK
-
-            var hd2 = new HoaDon(1002, "KH002", new DateTime(2025, 11, 12));
-            hd2.ChiTiet.Add(new ChiTietHoaDon(3, 1, 7200000));  // OK
-
-            var hd3 = new HoaDon(1003, "KH003", new DateTime(2025, 11, 15));
-            hd3.ChiTiet.Add(new ChiTietHoaDon(1, 15, 900000));  // Lỗi: vượt tồn kho
-
-            // Thêm hóa đơn
-            ql.ThemHoaDon(hd1);
-            ql.ThemHoaDon(hd2);
-            ql.ThemHoaDon(hd3); // Bị từ chối
-
-            // Thống kê
-            var khTop = ql.ThongKeKhachHangMuaNhieuNhat(11, 2025);
-            if (khTop != null)
-                Console.WriteLine("Khách mua nhiều nhất: " + khTop.HoTen);
-            else
-                Console.WriteLine("Không có khách mua hàng vào thời gian này!");
-
-
         }
     }
 }
